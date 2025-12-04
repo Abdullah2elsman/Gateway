@@ -1,0 +1,89 @@
+.containerPage {
+  padding: 20px;
+}
+
+@media (max-width: 767px) {
+  .containerPage {
+    padding: 10px;
+  }
+}
+
+.containerPage .containerPage_content {
+  display: flex;
+  flex-direction: column;
+}
+
+.containerPage .containerPage_content .table {
+  background-color: var(--bg-sidebar);
+  border: var(--border-primary);
+  border-radius: 10px;
+  box-shadow: var(--shadow-secondary);
+  overflow: auto;
+}
+
+/* Profile Page */
+.containerPage .containerPage_content .profile {
+  width: 95%;
+  margin: 20px auto 40px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--bg-sidebar);
+  box-shadow: var(--shadow-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+@media (min-width: 767px) {
+  .containerPage .containerPage_content .profile {
+    width: 600px;
+    padding: 20px 40px;
+  }
+}
+
+.containerPage .containerPage_content .profile .profileTilte {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.containerPage .containerPage_content .profile .profileTilte img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.containerPage
+  .containerPage_content
+  .profile
+  .profileTilte
+  input[type="file"] {
+  display: none;
+}
+
+.containerPage .containerPage_content .profile .profileTilte label.fileUpload {
+  padding: 10px 15px;
+  background-color: var(--bg-button);
+  color: var(--text-white);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.containerPage
+  .containerPage_content
+  .profile
+  .profileTilte
+  label.fileUpload:hover {
+  opacity: 1;
+}
+
+.containerPage .containerPage_content .profile form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

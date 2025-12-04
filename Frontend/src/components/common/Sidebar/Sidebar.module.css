@@ -1,0 +1,182 @@
+.Sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  min-height: 100vh;
+  background-color: var(--bg-sidebar);
+  overflow: auto;
+  transition: All 0.3s ease;
+  z-index: 999;
+}
+
+@media (min-width: 300px) {
+  .Sidebar.open {
+    width: 70%;
+  }
+}
+
+@media (min-width: 767px) {
+  .Sidebar.open {
+    width: 40%;
+  }
+}
+
+@media (min-width: 991px) {
+  .Sidebar.open {
+    width: 30%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .Sidebar {
+    width: 22%;
+  }
+}
+
+@media (min-width: 1500px) {
+  .Sidebar {
+    width: 18%;
+  }
+}
+
+.Sidebar.open .overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.Sidebar.open .Sidebar_content {
+  position: absolute;
+  background-color: var(--bg-body);
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 30px;
+  overflow: auto;
+  z-index: 6002 !important;
+}
+
+.Sidebar .Sidebar_content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 10px 20px 30px;
+  width: 100%;
+  position: absolute;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.Sidebar .Sidebar_content .Sidebar_title {
+  text-align: center;
+  user-select: none;
+}
+
+.Sidebar .Sidebar_content .Sidebar_title p {
+  padding: 20px;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_title img {
+  width: 60%;
+  max-height: 180px;
+  border-radius: 40px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu span {
+  font-size: 15px;
+  color: var(--bg-secondary);
+  user-select: none;
+  padding-left: 10px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu a {
+  text-decoration: none;
+  padding: 0 10px;
+  color: var(--bg-primary);
+  transition: All 0.3s linear;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu a.active {
+  color: var(--bg-active);
+  border-left: 3px solid var(--bg-active);
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu a:hover {
+  color: var(--bg-active);
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu a .icon {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu a.active .icon {
+  color: var(--bg-active);
+}
+
+/* Switch Dark Mode */
+
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu .darkMode {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Sidebar .Sidebar_content .Sidebar_menu ul .element_menu .darkMode .dark_title {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 10px;
+}
+.Sidebar
+  .Sidebar_content
+  .Sidebar_menu
+  ul
+  .element_menu
+  .darkMode
+  .dark_title
+  .icon {
+  font-weight: bold;
+  font-size: 25px;
+  color: var(--bg-secondary);
+}
+
+.Sidebar
+  .Sidebar_content
+  .Sidebar_menu
+  ul
+  .element_menu
+  .darkMode
+  .dark_title
+  h3 {
+  color: var(--bg-primary);
+  font-size: 16px;
+  font-weight: 500;
+}

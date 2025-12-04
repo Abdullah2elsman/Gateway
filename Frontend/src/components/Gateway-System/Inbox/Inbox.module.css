@@ -1,0 +1,72 @@
+.Inbox {
+  padding: 10px;
+}
+
+.Inbox.pageInbox {
+  width: 95%;
+  margin: auto;
+  background-color: var(--bg-sidebar);
+  box-shadow: var(--shadow-secondary);
+}
+
+.Inbox .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.Inbox .Inbox_content {
+  padding-bottom: 50px;
+  position: relative;
+}
+
+.Inbox .Inbox_content .divider {
+  width: 90%;
+  margin: auto;
+  border-color: #eee;
+}
+
+.Inbox .Inbox_content .content_item:last-of-type .divider {
+  display: none;
+}
+
+.Inbox .Inbox_content .item {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.Inbox .Inbox_content .item span {
+  font-size: 14px;
+  color: #666;
+}
+
+.ViewAll {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  width: 100%;
+  padding: 10px;
+}
+
+.ViewAll button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 5px;
+  background-color: #eee;
+  font-weight: bold;
+  font-family: var(--font-family);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.ViewAll button:hover {
+  opacity: 1;
+}

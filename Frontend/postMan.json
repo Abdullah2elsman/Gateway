@@ -1,0 +1,149 @@
+{
+  "role_title": "SuperAdmin",
+  "premissions": {
+    "branches": {
+      "create-branch": true,
+      "view-branches": true,
+      "update-branch": true,
+      "delete-branch": true
+    },
+    "roles": {
+      "create-role": true,
+      "view-roles": true,
+      "view-permissions": true,
+      "update-role": true,
+      "delete-role": true
+    },
+    "users": {
+      "create-users": true,
+      "assign-user-role": true,
+      "assign-user-status": true,
+      "view-users": true,
+      "view-roles": true,
+      "view-status": true,
+      "view-own-users": true,
+      "view-self": true,
+
+      "view-self-role": true,
+      "view-self-status": true,
+      "update-users": true,
+      "update-all-roles": true,
+      "update-all-status": true,
+      "update-own-users": true,
+      "update-own-role": true,
+      "update-own-status": true,
+      "update-self": true,
+      "update-self-role": true,
+      "update-self-status": true,
+      "delete-users": true,
+      "delete-own-users": true,
+      "delete-self": true
+    },
+
+    "pendingusers": {
+      "assign-activate": true,
+      "view-pending-users": true,
+      "delete-pending-users": true
+    },
+    "waitlist": {
+      "create-trainees": true,
+      "assign-class": true,
+      "assign-trainer": true,
+      "assign-level": true,
+      "view-trainees": true,
+      "view-trainers": true,
+      "view-levels": true,
+      "view-own-trainees": true,
+      "view-own-trainers": true,
+      "view-own-levels": true,
+      "update-trainees": true,
+      "update-all-trainers": true,
+      "update-all-levels": true,
+      "update-own-trainees": true,
+      "update-own-trainers": true,
+      "update-own-levels": true,
+      "delete-trainees": true,
+      "delete-own-trainees": true
+    },
+
+    "pendinglist": {
+      "create-trainees": true,
+      "assign-follow_up": true,
+      "assign-trainer": true,
+      "assign-level": true,
+      "view-trainees": true,
+      "view-follow_up": true,
+      "view-trainers": true,
+      "view-levels": true,
+      "view-own-trainees": true,
+      "view-own-follow_up": true,
+      "view-own-trainers": true,
+      "view-own-levels": true,
+      "update-trainees": true,
+      "update-all-trainers": true,
+      "update-all-levels": true,
+      "update-own-trainees": true,
+      "update-own-trainers": true,
+      "update-own-levels": true,
+      "delete-trainees": true,
+      "delete-own-trainees": true
+    },
+
+    "holdlist": {
+      "assign-trainer": true,
+      "assign-level": true,
+      "view-trainees": true,
+      "view-trainers": true,
+      "view-levels": true,
+      "view-own-trainees": true,
+      "view-own-trainers": true,
+      "view-own-levels": true,
+      "update-trainees": true,
+      "update-all-trainers": true,
+      "update-all-levels": true,
+      "update-own-trainees": true,
+      "update-own-trainers": true,
+      "update-own-levels": true,
+      "delete-trainees": true,
+      "delete-own-trainees": true
+    },
+
+    "refundlist": {
+      "assign-trainer": true,
+      "assign-level": true,
+      "view-trainees": true,
+      "view-trainers": true,
+      "view-levels": true,
+      "view-own-trainees": true,
+      "view-own-trainers": true,
+      "view-own-levels": true,
+      "update-trainees": true,
+      "update-all-trainers": true,
+      "update-all-levels": true,
+      "update-own-trainees": true,
+      "update-own-trainers": true,
+      "update-own-levels": true,
+      "delete-trainees": true,
+      "delete-own-trainees": true
+    },
+
+    "blacklist": {
+      "assign-trainer": true,
+      "assign-level": true,
+      "view-trainees": true,
+      "view-trainers": true,
+      "view-levels": true,
+      "view-own-trainees": true,
+      "view-own-trainers": true,
+      "view-own-levels": true,
+      "update-trainees": true,
+      "update-all-trainers": true,
+      "update-all-levels": true,
+      "update-own-trainees": true,
+      "update-own-trainers": true,
+      "update-own-levels": true,
+      "delete-trainees": true,
+      "delete-own-trainees": true
+    }
+  }
+}

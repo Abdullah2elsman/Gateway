@@ -1,0 +1,13 @@
+.footer {
+  /* background-color: var(--bg-sidebar); */
+  padding: 15px 10px;
+  text-align: center;
+  /* margin: 0px 20px; */
+  margin-top: auto;
+  /* box-shadow: var(--shadow-secondary) */
+}
+
+.footer h3 {
+  color: var(--text-black);
+  font-size: 14px;
+}

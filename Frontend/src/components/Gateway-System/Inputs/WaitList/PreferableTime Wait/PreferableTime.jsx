@@ -1,0 +1,116 @@
+import {
+  clearError,
+  createPreferableTime,
+  deletePreferableTime,
+  fetchPreferableTime,
+  fetchPreferableTimeFiltered
+} from "@src/store/reducers/WaitList/View/ViewSlice";
+import { ToastError, ToastSuccess } from "@src/util/Toast";
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { SiCoursera } from "react-icons/si";
+import { useDispatch, useSelector } from "react-redux";
+import Select from "../../Select";
+
+const PreferableTime = ({
+  id,
+  defaultValue,
+  onChange,
+  attend_type,
+  age_group,
+  Button,
+  label,
+  required,
+  showRemoveButton = true,
+}) => {
+  const dispatch = useDispatch();
+
+  const { preferableTime, loading, error } = useSelector(
+    (state) => state.viewWaitList
+  );
+
+  useEffect(() => {
+    if (attend_type && age_group) {
+      // Use filtered endpoint when attend_type and age_group are provided
+      dispatch(fetchPreferableTimeFiltered({ attend_type, age_group }));
+    } else {
+      // Fallback to general endpoint
+      dispatch(fetchPreferableTime());
+    }
+  }, [dispatch, attend_type, age_group]);
+
+  // create a new Preferable Time
+  const createNewPreferableTime = (preferable_time) => {
+    dispatch(createPreferableTime({ preferable_time }))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        dispatch(fetchPreferableTime());
+      })
+      .catch((error) => {
+        ToastError(error.message || error || "Failed to add preferable time");
+      });
+  };
+
+  // delete a preferable time
+  const deletePreferableTimeHandler = (timeId) => {
+    if (window.confirm("Are you sure you want to delete this preferable time?")) {
+      dispatch(deletePreferableTime(timeId))
+        .unwrap()
+        .then(({ message }) => {
+          ToastSuccess(message);
+          dispatch(fetchPreferableTime());
+        })
+        .catch((error) => {
+          ToastError(error.message || "Failed to delete preferable time");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+    }
+  }, [error, dispatch]);
+
+  return (
+    <Select
+      id={id}
+      name="Preferable Time"
+      label={label || "Preferable time of slot (Optional)"}
+      options={
+        preferableTime?.map((time) => ({
+          id: time.id,
+          label: time.preferable_time || time.time_slot,
+        })) || []
+      }
+      placeholder="Preferable time"
+      Icon={<SiCoursera size={23} />}
+      Button={Button}
+      showRemoveButton={showRemoveButton}
+      defaultValue={defaultValue}
+      required={required}
+      isLoading={loading}
+      onSubmitNew={createNewPreferableTime}
+      onDelete={deletePreferableTimeHandler}
+      onChange={onChange}
+    />
+  );
+};
+
+PreferableTime.propTypes = {
+  id: PropTypes.string.isRequired,
+  defaultValue: PropTypes.string,
+  onChange: PropTypes.func,
+  attend_type: PropTypes.string,
+  age_group: PropTypes.string,
+  Button: PropTypes.bool,
+  required: PropTypes.bool,
+  label: PropTypes.string,
+  showRemoveButton: PropTypes.bool,
+};
+
+export default PreferableTime;

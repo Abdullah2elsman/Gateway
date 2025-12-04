@@ -1,0 +1,211 @@
+.Batches {
+  padding: 10px;
+}
+
+.Batches .Batches_content {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Batches .Batches_content .Batches_Active {
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.Batches .Batches_content .Batches_Active .active_title {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Batches .Batches_content .Batches_Active .active_title h3 {
+  color: var(--text-gray);
+}
+
+.Batches .Batches_content .Batches_Active .active_title .icon {
+  font-size: 25px;
+  color: var(--batches-icon);
+}
+
+.Batches .Batches_content .Batches_Active .active_info {
+  background-color: var(--bg-sidebar);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: var(--shadow-secondary);
+}
+
+.Batches
+  .Batches_content
+  .Batches_Active
+  .active_info
+  :is(.info_title, .info_classes) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_title h4 {
+  color: var(--text-gray);
+  font-weight: 600;
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_title .icon {
+  color: var(--bg-primary);
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_date p {
+  color: var(--bg-primary);
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_date .icon {
+  font-size: 16px;
+  color: var(--bg-primary);
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_classes span {
+  color: var(--text-gray);
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_classes .icon {
+  font-size: 25px;
+  color: var(--text-gray);
+}
+
+.Batches .Batches_content .Batches_Active .active_info .info_classes button {
+  background-color: var(--bg-button);
+  color: var(--text-white);
+  border: none;
+  padding: 13px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.3;
+}
+
+.Batches
+  .Batches_content
+  .Batches_Active
+  .active_info
+  .info_classes
+  button:hover {
+  opacity: 1;
+}
+
+/* Batches Archive */
+.Batches .Batches_content .Batches_Archive {
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.Batches .Batches_content .Batches_Archive .archive_title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.Batches .Batches_content .Batches_Archive .archive_title h3 {
+  color: var(--text-gray);
+}
+
+.Batches .Batches_content .Batches_Archive .archive_title .icon {
+  font-size: 25px;
+  color: var(--batches-icon);
+}
+
+.Batches .Batches_content .Batches_Archive .archive_List {
+  display: grid;
+  grid-template-columns: auto;
+  margin-top: 20px;
+  gap: 30px 20px;
+}
+
+@media (min-width: 767px) {
+  .Batches .Batches_content .Batches_Archive .archive_List {
+    grid-template-columns: auto auto;
+  }
+}
+
+@media (min-width: 1199px) {
+  .Batches .Batches_content .Batches_Archive .archive_List {
+    grid-template-columns: auto auto auto;
+  }
+}
+
+/* List Box */
+.Batches .list_item {
+  width: 100%;
+  background-color: var(--bg-sidebar);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.Batches .list_item :is(.item_title, .item_classes) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.Batches .list_item .item_title h4 {
+  color: var(--text-gray);
+  font-weight: 600;
+}
+
+.Batches .list_item .item_title .icon {
+  font-size: 25px;
+  color: var(--bg-primary);
+}
+
+.Batches .list_item .item_date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Batches .list_item .item_date :is(p, .icon) {
+  color: var(--bg-primary);
+}
+
+.Batches .list_item .item_classes span {
+  color: var(--text-gray);
+}
+
+.Batches .list_item .item_classes .icon {
+  font-size: 25px;
+  color: var(--text-gray);
+}
+
+.Batches .list_item .item_classes button {
+  background-color: var(--bg-button);
+  color: var(--text-white);
+  border: none;
+  padding: 13px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.3;
+}
+
+.Batches .list_item .item_classes button:hover {
+  opacity: 1;
+}

@@ -1,0 +1,74 @@
+.Error {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  background-color: var(--bg-body);
+}
+
+.Error .Error_Content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-width: 410px;
+  width: 100%;
+  text-align: center;
+}
+
+.Error .Error_Content h1 {
+  font-family: montserrat, sans-serif;
+  font-size: 100px;
+  font-weight: 900;
+  background: url("../assets/image/Error.jpg") no-repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 768px) {
+  .Error .Error_Content h1 {
+    font-size: 230px;
+  }
+}
+
+.Error .Error_Content .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.Error .Error_Content .info h2 {
+  font-family: montserrat, sans-serif;
+  color: var(--text-black);
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 0;
+}
+
+.Error .Error_Content .info p {
+  font-family: montserrat, sans-serif;
+  color: var(--text-black);
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.Error .Error_Content .info a {
+  font-family: montserrat, sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  text-transform: uppercase;
+  background: #0046d5;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 40px;
+  color: #fff;
+  font-weight: 700;
+  -webkit-box-shadow: 0 4px 15px -5px #0046d5;
+  box-shadow: 0 4px 15px -5px #0046d5;
+}

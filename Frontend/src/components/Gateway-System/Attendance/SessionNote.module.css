@@ -1,0 +1,87 @@
+/* .SessionNotes .view_button {
+  padding: 8px 10px;
+  background: var(--bg-button);
+  color: var(--text-white);
+  border: none;
+  border-radius: 5px;
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+
+.session_list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.session_list:first-of-type {
+  padding-top: 40px;
+}
+
+.session_list .info_list {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.session_list .list_checkbox {
+  color: var(--text-gray);
+}
+
+.session_list .info_list p {
+  font-size: 16px;
+  color: var(--text-gray);
+  word-break: break-all;
+}
+
+.session_list .iconEdit {
+  font-size: 20px;
+  color: var(--bg-button);
+  cursor: pointer;
+} */
+
+.SessionNotes {
+  display: "flex";
+  flex-direction: "column";
+}
+
+.SessionNotes .SessionNotes_wapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.SessionNotes .SessionNotes_wapper p {
+  width: 100%;
+  text-align: center;
+}
+
+.SessionNotes .session_list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.SessionNotes .session_list:not(:last-of-type) {
+  border-right: 1px solid #ddd;
+  padding: 10px;
+}
+
+.SessionNotes .session_list input {
+  background-color: transparent;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  color: var(--text-gray);
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.1s linear;
+}
+
+.SessionNotes .session_list input.foucs:focus {
+  border: 2px solid #2b6cb0;
+}

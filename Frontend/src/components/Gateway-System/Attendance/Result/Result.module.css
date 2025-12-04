@@ -1,0 +1,75 @@
+.Result {
+  width: 100%;
+}
+
+.Result select {
+  width: 100%;
+  padding: 10px;
+  /* padding-left: 20px; */
+  padding-right: 20px;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-family);
+  outline: none;
+  line-height: 1.6;
+  appearance: none;
+  position: relative;
+  font-size: 15px;
+  text-align: center;
+  box-shadow: var(--shadow-secondary);
+}
+
+.Result .icons {
+  position: absolute;
+  top: 52%;
+  right: 15%;
+  transform: translate(-50%, -50%);
+  color: #eee;
+}
+
+.Result select.Passed {
+  background: green;
+}
+
+.Result select.Failed {
+  background: red;
+}
+
+.Result select.No {
+  background: blue;
+}
+
+.Result select.Undertest {
+  background: yellow;
+  color: #333;
+}
+
+.Result select.Re {
+  background: brown;
+}
+
+.Result select.Postponed {
+  background: purple;
+}
+
+.Result select.Downgrade {
+  background: rgba(165, 42, 42, 0.5);
+  color: brown;
+}
+
+.Result select.Upgrade {
+  background: rgba(0, 0, 255, 0.418);
+  color: blue;
+}
+
+.Result select:focus {
+  outline: none;
+}
+
+.Result select option {
+  width: 100%;
+  line-height: 1.7;
+  background-color: #eee;
+  color: #333;
+}

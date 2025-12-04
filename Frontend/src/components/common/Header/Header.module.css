@@ -1,0 +1,125 @@
+.header {
+  width: 100%;
+  display: none;
+}
+
+@media (min-width: 767px) {
+  .header {
+    display: block;
+  }
+}
+
+.header .header_content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  padding: 10px;
+}
+
+@media (min-width: 767px) {
+  .header .header_content {
+    padding: 30px;
+    gap: 0px;
+  }
+}
+
+.header .header_content .menu {
+  cursor: pointer;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.5s, opacity 0.5s;
+}
+
+@media (min-width: 1200px) {
+  .header .header_content .menu {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+.header .header_content .menu button {
+  color: var(--text-black);
+}
+
+.header .header_content .menu .icon {
+  font-size: 30px;
+  font-family: bold;
+}
+
+.header .header_content .profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: var(--shadow-secondary);
+  background-color: var(--bg-sidebar);
+  padding: 4px 15px;
+  border-radius: 20px;
+}
+
+.header .header_content .profile .search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-body);
+  border: var(--border-secondary);
+  border-radius: 25px;
+  padding: 5px;
+  padding: 0 10px;
+}
+
+.header .header_content .profile .search input {
+  border: none;
+  padding: 10px 0;
+  background-color: transparent;
+  outline: none;
+  color: var(--text-black);
+}
+
+.header .header_content .profile .search input:focus::placeholder {
+  opacity: 0;
+}
+
+.header .header_content .profile .search .icon {
+  font-size: 18px;
+  color: #999;
+}
+
+.header .header_content .profile .profile_info {
+  display: flex;
+  align-items: center;
+}
+
+.header .header_content .profile .profile_info .counter {
+  position: absolute;
+  top: -3px;
+  right: 0px;
+  background: #fa383e;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header .header_content .profile .profile_info .counter .counterText {
+  color: #fff;
+  font-size: 14px;
+}
+
+.header .header_content .profile .profile_info .icon {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--bg-primary);
+  cursor: pointer;
+}
+
+.header .header_content .profile .profile_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}

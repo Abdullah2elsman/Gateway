@@ -1,0 +1,70 @@
+.Toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 10px 20px 20px;
+}
+
+@media (max-width: 768px) {
+  .Toolbar {
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+  }
+}
+
+.Toolbar h3 {
+  color: var(--text-black);
+  font-size: 18px;
+}
+
+.Toolbar .ToolbarWapper {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  align-items: center;
+  justify-content: end;
+}
+
+@media (max-width: 768px) {
+  .Toolbar .ToolbarWapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
+
+.Toolbar .ToolbarWapper .branch {
+  width: 270px;
+  margin-right: 10px;
+}
+
+.Toolbar .icon {
+  color: var(--bg-button) !important;
+}
+
+.Toolbar .ToolbarButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0;
+  padding-right: 20px;
+}
+
+.Toolbar .btn {
+  background: var(--bg-button) !important;
+  color: var(--text-white) !important;
+  border: none !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  text-transform: none !important;
+  font-family: var(--font-family);
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.Toolbar .btnDelete:hover {
+  opacity: 1;
+}

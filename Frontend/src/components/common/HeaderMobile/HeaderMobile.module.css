@@ -1,0 +1,103 @@
+.headerMobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .headerMobile {
+    display: block;
+    background-color: var(--bg-sidebar);
+    box-shadow: var(--shadow-secondary);
+    margin: 10px;
+    border-radius: 10px;
+  }
+}
+
+.headerMobile .headerMobile_content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  padding: 10px;
+  position: relative;
+}
+
+.headerMobile .headerMobile_content .menu button {
+  color: var(--text-black);
+}
+
+.headerMobile .headerMobile_content .menu .icon {
+  font-size: 30px;
+  font-family: bold;
+}
+
+.headerMobile .headerMobile_content .profile {
+  display: flex;
+  align-items: center;
+}
+
+.headerMobile .headerMobile_content .profile .icon {
+  font-size: 18px;
+  color: #999;
+}
+
+.headerMobile .headerMobile_content .profile .search {
+  position: absolute;
+  bottom: 120px;
+  left: 0;
+  width: 100%;
+  padding: 5px 10px;
+  background-color: var(--bg-sidebar);
+  border: var(--border-secondary);
+  box-shadow: var(--shadow-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1223;
+  transition: 0.3s;
+}
+
+.headerMobile .headerMobile_content .profile .search.show {
+  bottom: -40px;
+}
+
+.headerMobile .headerMobile_content .profile .search input {
+  border: none;
+  padding: 10px 0;
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+}
+
+.headerMobile .headerMobile_content .profile .search input:focus::placeholder {
+  opacity: 0;
+}
+
+.headerMobile .headerMobile_content .profile .profile_info {
+  display: flex;
+  align-items: center;
+}
+
+.headerMobile .headerMobile_content .profile .profile_info .counter {
+  position: absolute;
+  top: -3px;
+  right: 0px;
+  background: #fa383e;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerMobile .headerMobile_content .profile .profile_info .counter .counterText {
+  color: #fff;
+  font-size: 14px;
+}
+
+.headerMobile .headerMobile_content .profile .profile_info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}

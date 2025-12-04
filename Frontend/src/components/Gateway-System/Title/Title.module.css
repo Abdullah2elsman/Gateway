@@ -1,0 +1,25 @@
+.Title .Title_content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: var(--bg-sidebar);
+}
+.Title .Title_content h3 {
+  color: var(--text-black);
+}
+.Title .Title_content button {
+  background: var(--bg-button);
+  padding: 13px 10px;
+  border: none;
+  color: var(--text-white);
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 0.9;
+}
+
+.Title .Title_content button:hover {
+  opacity: 1;
+}

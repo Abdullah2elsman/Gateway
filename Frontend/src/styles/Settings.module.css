@@ -1,0 +1,43 @@
+.Settings {
+  padding: 50px;
+}
+
+.Settings .Settings_content {
+  width: 80%;
+  margin-top: 20px;
+  background-color: var(--bg-sidebar);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-secondary);
+}
+
+.Settings .Settings_content label {
+  color: var(--text-gray);
+  font-weight: bold;
+}
+
+.Settings .Settings_content .input {
+  width: 100%;
+}
+
+.Settings .Settings_content button {
+  width: fit-content;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--bg-button);
+  color: var(--text-white);
+  font-size: 17px;
+  font-weight: bold;
+  font-family: var(--font-family);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.Settings .Settings_content button:hover {
+  opacity: 1;
+}

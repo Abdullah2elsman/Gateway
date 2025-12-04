@@ -1,0 +1,114 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-body: #fafaff;
+  --bg-sidebar: #fff;
+  --bg-primary: #9694a9;
+  --bg-secondary: #c1c1cf;
+  --bg-third: #9694a9;
+  --bg-active: #265255;
+  --bg-button: #265255;
+  --bg-icon: rgb(241 241 241);
+  --bg-input: "#fff";
+  --text-white: #fff;
+  --text-black: #333;
+  --annonce-date: #666;
+  --text-gray: #444;
+  --text-input: rgba(0, 0, 0, 0.6);
+  --batches-icon: #666;
+  --search-table: #fafaff;
+  --border-primary: 1px solid #eee;
+  --border-secondary: 1px solid #ddd;
+  --shadow-primary: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  --shadow-secondary: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  --font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+  background-color: var(--bg-body);
+  font-family: var(--font-family);
+  padding: 0px !important;
+  overflow: inherit !important;
+}
+
+body.dark {
+  --bg-body: rgb(37 38 41);
+  --bg-sidebar: rgb(44 46 54);
+  --bg-primary: #bbb;
+  --bg-third: #626189;
+  --bg-secondary: #c1c1cf;
+  --bg-active: rgb(219, 219, 219);
+  --bg-button: #eee;
+  --bg-icon: rgb(241 241 241);
+  --bg-input: #fff;
+  --text-white: #333;
+  --text-black: #eee;
+  --text-gray: #bbb;
+  --text-input: #bbb;
+  --annonce-date: #aaa;
+  --batches-icon: rgb(219, 219, 219);
+  --search-table: #fafaff;
+  --border-primary: none;
+  --border-secondary: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: row-reverse;
+  min-height: 100vh;
+}
+
+.content {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.content.fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+@media (min-width: 1200px) {
+  .content {
+    width: calc(100% - 22%);
+  }
+}
+
+@media (min-width: 1500px) {
+  .content {
+    width: calc(100% - 18%);
+  }
+}
+
+/* ScrollBar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color: #f1f1f1;
+}
+
+.Error {
+  text-align: center;
+  color: red;
+}
