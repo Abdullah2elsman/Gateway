@@ -5,12 +5,10 @@ namespace App\Trainees\Pendinglist\Deletes;
 use Exception;
 use App\Models\Trainee;
 use App\Models\GeneralMeta;
-use App\Traits\ClearTraineeCache;
 use Illuminate\Support\Facades\Gate;
 
 class DeleteLevel
 {
-    use ClearTraineeCache;
 
     protected $current_user;
     protected $list_name = 'pendinglist_levels';
@@ -37,9 +35,6 @@ class DeleteLevel
 
             // Unset level for all trainees who had this level
             $affected = $trainee->where('level', $id)->update(['level' => null]);
-
-            // Clear caches related to general meta and trainees lists
-            $this->clearGeneralTraineeCache();
 
             return response([
                 'message' => 'Level deleted successfully',

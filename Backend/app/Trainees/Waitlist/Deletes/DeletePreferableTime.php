@@ -5,14 +5,13 @@ namespace App\Trainees\Waitlist\Deletes;
 use Exception;
 use App\Models\Trainee;
 use App\Models\GeneralMeta;
-use App\Traits\ClearTraineeCache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CheckPermission;
 
 class DeletePreferableTime
 {
-    use ClearTraineeCache, CheckPermission;
+    use CheckPermission;
 
     protected $current_user;
     protected $list_name = 'preferable_times';
@@ -39,8 +38,8 @@ class DeletePreferableTime
 
             // Find the preferable time by ID and meta_key
             $gPreferableTime = GeneralMeta::where('id', $id)
-                                ->where('meta_key', $this->list_name)
-                                ->first();
+                ->where('meta_key', $this->list_name)
+                ->first();
 
             if (!$gPreferableTime) {
                 DB::rollBack();
@@ -52,24 +51,21 @@ class DeletePreferableTime
 
             // Check if any trainees are currently assigned to this preferable time
             $traineeCount = Trainee::where('preferable_time', $id)
-                                   ->orWhere('sec_preferable_time', $id)
-                                   ->count();
+                ->orWhere('sec_preferable_time', $id)
+                ->count();
 
             // Update trainees to remove this preferable time assignment
             $affected = 0;
             if ($traineeCount > 0) {
                 // Update primary preferable time
                 $affected += Trainee::where('preferable_time', $id)->update(['preferable_time' => null]);
-                
+
                 // Update secondary preferable time
                 $affected += Trainee::where('sec_preferable_time', $id)->update(['sec_preferable_time' => null]);
             }
 
             // Delete the preferable time meta entry
             $gPreferableTime->delete();
-
-            // Clear caches related to general meta and trainees lists
-            $this->clearGeneralTraineeCache();
 
             // Commit the transaction
             DB::commit();
@@ -80,14 +76,13 @@ class DeletePreferableTime
                 'affected_trainees' => $affected,
                 'preferable_time_name' => $gPreferableTime->meta_value ?? 'Unknown'
             ], 200);
-
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error deleting preferable time: ' . $e->getMessage(), [
                 'preferable_time_id' => $id,
                 'user_id' => $this->current_user->id ?? null
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong. Preferable time cannot be deleted. Please contact the administrator.'

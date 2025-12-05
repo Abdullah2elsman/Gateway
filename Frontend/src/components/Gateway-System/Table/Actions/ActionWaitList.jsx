@@ -1,22 +1,19 @@
-import PropTypes from "prop-types";
 import { MenuItem } from "@mui/material";
+import { clearSelected } from "@src/store/Hook/clearSelection";
+import {
+    MoveToBlackList,
+    MoveToHoldList,
+    MoveToRefundList,
+} from "@src/store/reducers/WaitList/Move/MoveWaitListSlice";
+import checkPermission from "@src/util/CheckPermission";
+import { ToastSuccess } from "@src/util/Toast";
+import PropTypes from "prop-types";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { GoBlocked } from "react-icons/go";
 import { MdMotionPhotosPaused, MdOutlineDateRange } from "react-icons/md";
 import { TbCreditCardRefund } from "react-icons/tb";
 import { useDispatch } from "react-redux";
-import {
-  fetchWaitList,
-} from "@src/store/reducers/WaitList/WaitListSlice";
-import { ToastSuccess } from "@src/util/Toast";
-import {
-  MoveToBlackList,
-  MoveToHoldList,
-  MoveToRefundList,
-} from "@src/store/reducers/WaitList/Move/MoveWaitListSlice";
-import checkPermission from "@src/util/CheckPermission";
-import { clearSelected } from "@src/store/Hook/clearSelection";
 
 const ActionWaitlist = ({
   row,
@@ -32,7 +29,6 @@ const ActionWaitlist = ({
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchWaitList());
         dispatch(clearSelected());
       });
   };
@@ -42,7 +38,6 @@ const ActionWaitlist = ({
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchWaitList());
         dispatch(clearSelected());
       });
   };
@@ -52,7 +47,6 @@ const ActionWaitlist = ({
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchWaitList());
         dispatch(clearSelected());
       });
   };

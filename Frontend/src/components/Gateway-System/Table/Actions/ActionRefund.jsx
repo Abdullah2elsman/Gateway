@@ -1,17 +1,17 @@
 import { MenuItem } from "@mui/material";
+import { clearSelected } from "@src/store/Hook/clearSelection";
+import { MoveRefundToWaitList } from "@src/store/reducers/Refund/Move/MoveRefundSlice";
+import {
+    DeleteRefundList,
+    fetchRefundList,
+} from "@src/store/reducers/Refund/RefundSlice";
+import checkPermission from "@src/util/CheckPermission";
+import { ToastSuccess } from "@src/util/Toast";
+import PropTypes from "prop-types";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
-import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import {
-  DeleteRefundList,
-  fetchRefundList,
-} from "@src/store/reducers/Refund/RefundSlice";
-import { ToastSuccess } from "@src/util/Toast";
 import { MdMotionPhotosPaused } from "react-icons/md";
-import { MoveRefundToWaitList } from "@src/store/reducers/Refund/Move/MoveRefundSlice";
-import checkPermission from "@src/util/CheckPermission";
-import { clearSelected } from "@src/store/Hook/clearSelection";
+import { useDispatch } from "react-redux";
 
 const ActionRefund = ({ row, closeMenu, HandlerEdit, onRequestDelete }) => {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ const ActionRefund = ({ row, closeMenu, HandlerEdit, onRequestDelete }) => {
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchRefundList());
         dispatch(clearSelected());
       });
   };

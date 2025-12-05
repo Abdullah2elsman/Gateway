@@ -27,7 +27,7 @@ class GoogleFormController extends Controller
             // Validate incoming data based on your form fields
             $validator = Validator::make($request->all(), [
                 'full_name' => 'required|string|max:255',
-                'mobile_number' => 'required|string',                
+                'mobile_number' => 'required|string',
                 'preferable_time' => 'nullable|integer',
             ]);
 
@@ -50,7 +50,7 @@ class GoogleFormController extends Controller
             $trainee->user_id = 2423; // => Mahmoud
             $trainee->moved_date = now();
             $trainee->save();
-            
+
             // Create meta of trainee (age_group => Adult)
             $meta_age_group = new TraineeMeta();
             $meta_age_group->trainee_id = $trainee->id;
@@ -64,15 +64,15 @@ class GoogleFormController extends Controller
             $meta_phone_number->meta_key = "phone_number_0";
             $meta_phone_number->meta_value = $request->mobile_number;
             $meta_phone_number->save();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Form data saved successfully',
                 'trainee_id' => $trainee->id,
                 'trainee' => $trainee,
                 'meta_age_group' => $meta_age_group,
-                'meta_phone_number' =>$meta_phone_number
+                'meta_phone_number' => $meta_phone_number
             ], 201);
-
         } catch (Exception $e) {
             Log::error('Google Form Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -86,5 +86,4 @@ class GoogleFormController extends Controller
             ], 500);
         }
     }
-
 }

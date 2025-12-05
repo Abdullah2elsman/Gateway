@@ -5,7 +5,6 @@ namespace App\Trainees\Waitlist\Deletes;
 use Exception;
 use App\Models\Trainee;
 use App\Models\GeneralMeta;
-use App\Traits\ClearTraineeCache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +12,7 @@ use App\Traits\CheckPermission;
 
 class DeleteLevel
 {
-    use ClearTraineeCache, CheckPermission;
+    use CheckPermission;
 
     protected $current_user;
     protected $list_name = 'waitlist_levels';
@@ -40,8 +39,8 @@ class DeleteLevel
 
             // Find the level by ID and meta_key
             $gLevel = GeneralMeta::where('id', $id)
-                                ->where('meta_key', $this->list_name)
-                                ->first();
+                ->where('meta_key', $this->list_name)
+                ->first();
 
             if (!$gLevel) {
                 DB::rollBack();
@@ -63,9 +62,6 @@ class DeleteLevel
             // Delete the level meta entry
             $gLevel->delete();
 
-            // Clear caches related to general meta and trainees lists
-            $this->clearGeneralTraineeCache();
-
             // Commit the transaction
             DB::commit();
 
@@ -75,14 +71,13 @@ class DeleteLevel
                 'affected_trainees' => $affected,
                 'level_name' => $gLevel->meta_value ?? 'Unknown'
             ], 200);
-
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error deleting level: ' . $e->getMessage(), [
                 'level_id' => $id,
                 'user_id' => $this->current_user->id ?? null
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong. Level cannot be deleted. Please contact the administrator.'

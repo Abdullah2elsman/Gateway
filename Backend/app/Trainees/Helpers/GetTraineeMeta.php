@@ -10,45 +10,34 @@ trait GetTraineeMeta
     {
         // Pre-load all GeneralMeta to avoid N+1 queries
         $metaIds = [];
-        foreach($trainees as $trainee) {
+        foreach ($trainees as $trainee) {
             if ($trainee->payment_type) $metaIds[] = $trainee->payment_type;
             if ($trainee->preferable_time) $metaIds[] = $trainee->preferable_time;
             if ($trainee->sec_preferable_time) $metaIds[] = $trainee->sec_preferable_time;
             if ($trainee->level) $metaIds[] = $trainee->level;
         }
-        
-        // Cache GeneralMeta with Laravel Cache (persistent across requests)
+
+        // Load GeneralMeta
         $generalMetaCache = [];
         if (!empty($metaIds)) {
             $uniqueIds = array_unique($metaIds);
-            
-            // Try to get from cache first
-            $generalMetaCache = \Illuminate\Support\Facades\Cache::remember(
-                'general_meta_' . md5(implode(',', $uniqueIds)),
-                3600, // Cache for 1 hour
-                function () use ($uniqueIds) {
-                    $cache = [];
-                    $metas = \App\Models\GeneralMeta::whereIn('id', $uniqueIds)->get();
-                    foreach ($metas as $meta) {
-                        $cache[$meta->id] = $meta->meta_value;
-                    }
-                    return $cache;
-                }
-            );
+
+            $metas = \App\Models\GeneralMeta::whereIn('id', $uniqueIds)->get();
+            foreach ($metas as $meta) {
+                $generalMetaCache[$meta->id] = $meta->meta_value;
+            }
         }
 
         $collection = [];
         $collection_index = 0;
 
-        foreach($trainees as $trainee)
-        {
-            if($trainee?->list?->list_title !== $class?->list) {
+        foreach ($trainees as $trainee) {
+            if ($trainee?->list?->list_title !== $class?->list) {
                 continue;
             }
 
             $trainee_collection = [];
-            foreach($class->keys as $col_key)
-            {
+            foreach ($class->keys as $col_key) {
                 $trainee_collection[$col_key] = $trainee->$col_key;
             }
 
@@ -62,30 +51,35 @@ trait GetTraineeMeta
 
             // Convert trainee_meta collection to array
             $meta_collection = [];
-            foreach($trainee->trainee_meta as $meta)
-            {
+            foreach ($trainee->trainee_meta as $meta) {
                 $meta_collection[$meta->meta_key] = $meta->meta_value;
             }
 
             // Use eager-loaded relationships instead of querying
             $trainer_collection = [];
-            if ($class->isAllowed($class->current_user, 'view_trainers', $class->permission_collection, $trainee?->user_id) ||
-                $class->isAllowed($class->current_user, 'view_own_trainers', $class->permission_collection, $trainee?->user_id)) {
+            if (
+                $class->isAllowed($class->current_user, 'view_trainers', $class->permission_collection, $trainee?->user_id) ||
+                $class->isAllowed($class->current_user, 'view_own_trainers', $class->permission_collection, $trainee?->user_id)
+            ) {
                 $trainer_collection = ['trainer' => $trainee->user?->full_name];
             }
 
             $level_collection = [];
-            if ($class->isAllowed($class->current_user, 'view_levels', $class->permission_collection, $trainee?->user_id) ||
-                $class->isAllowed($class->current_user, 'view_own_levels', $class->permission_collection, $trainee?->user_id)) {
+            if (
+                $class->isAllowed($class->current_user, 'view_levels', $class->permission_collection, $trainee?->user_id) ||
+                $class->isAllowed($class->current_user, 'view_own_levels', $class->permission_collection, $trainee?->user_id)
+            ) {
                 $level_collection = ['level' => $generalMetaCache[$trainee->level] ?? null];
             }
 
             $follow_up_collection = [];
-            if ($class->isAllowed($class->current_user, 'view_follow_up', $class->permission_collection, $trainee?->user_id) ||
-                $class->isAllowed($class->current_user, 'view_own_follow_up', $class->permission_collection, $trainee?->user_id)) {
+            if (
+                $class->isAllowed($class->current_user, 'view_follow_up', $class->permission_collection, $trainee?->user_id) ||
+                $class->isAllowed($class->current_user, 'view_own_follow_up', $class->permission_collection, $trainee?->user_id)
+            ) {
                 $follow_up_collection = ['follow_up' => $trainee->follow_up_user?->full_name];
             }
-            
+
             $collection[$collection_index++] = [
                 ...$trainee_collection,
                 ...$sub_collection,

@@ -1,18 +1,23 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { fetchBlackList } from "../BlackListSlice";
 
 // Move black to wait List
 export const MoveBlackToWaitList = createAsyncThunk(
   "moveBlacklist/MoveBlackToWaitList",
   async (id, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
+    const { rejectWithValue, dispatch } = thunkAPI;
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/dashboard/blacklist/${id}/wait`
       );
+      // Refetch blacklist data after successful move
+      dispatch(fetchBlackList());
+      // Refetch trainees table to update status column
+      dispatch(fetchTrainees({ branch: null, page: 1, per_page: 50 }));
       return res.data;
     } catch (error) {
-      rejectWithValue(error.response.data.message || error.response.data);
+      return rejectWithValue(error.response.data.message || error.response.data);
     }
   }
 );
@@ -21,15 +26,19 @@ export const MoveBlackToWaitList = createAsyncThunk(
 export const bulkMoveBlackToWaitList = createAsyncThunk(
   "moveBlacklist/bulkMoveBlackToWaitList",
   async (Userids, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
+    const { rejectWithValue, dispatch } = thunkAPI;
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/dashboard/blacklist/wait`,
         Userids
       );
+      // Refetch blacklist data after successful bulk move
+      dispatch(fetchBlackList());
+      // Refetch trainees table to update status column
+      dispatch(fetchTrainees({ branch: null, page: 1, per_page: 50 }));
       return res.data;
     } catch (error) {
-      rejectWithValue(error.response.data.message || error.response.data);
+      return rejectWithValue(error.response.data.message || error.response.data);
     }
   }
 );

@@ -5,14 +5,13 @@ namespace App\Trainees\Waitlist\Deletes;
 use Exception;
 use App\Models\Trainee;
 use App\Models\GeneralMeta;
-use App\Traits\ClearTraineeCache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Traits\CheckPermission;
 
 class DeletePaymentType
 {
-    use ClearTraineeCache, CheckPermission;
+    use CheckPermission;
 
     protected $current_user;
     protected $list_name = 'payment_types';
@@ -39,8 +38,8 @@ class DeletePaymentType
 
             // Find the payment type by ID and meta_key
             $gPaymentType = GeneralMeta::where('id', $id)
-                                ->where('meta_key', $this->list_name)
-                                ->first();
+                ->where('meta_key', $this->list_name)
+                ->first();
 
             if (!$gPaymentType) {
                 DB::rollBack();
@@ -62,9 +61,6 @@ class DeletePaymentType
             // Delete the payment type meta entry
             $gPaymentType->delete();
 
-            // Clear caches related to general meta and trainees lists
-            $this->clearGeneralTraineeCache();
-
             // Commit the transaction
             DB::commit();
 
@@ -74,14 +70,13 @@ class DeletePaymentType
                 'affected_trainees' => $affected,
                 'payment_type_name' => $gPaymentType->meta_value ?? 'Unknown'
             ], 200);
-
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('Error deleting payment type: ' . $e->getMessage(), [
                 'payment_type_id' => $id,
                 'user_id' => $this->current_user->id ?? null
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong. Payment type cannot be deleted. Please contact the administrator.'

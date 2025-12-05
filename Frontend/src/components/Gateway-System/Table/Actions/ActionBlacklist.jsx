@@ -1,17 +1,17 @@
 import { MenuItem } from "@mui/material";
+import { clearSelected } from "@src/store/Hook/clearSelection";
+import {
+    DeleteBlackList,
+    fetchBlackList,
+} from "@src/store/reducers/BlackList/BlackListSlice";
+import { MoveBlackToWaitList } from "@src/store/reducers/BlackList/Move/MoveBlackListSlice";
+import checkPermission from "@src/util/CheckPermission";
+import { ToastSuccess } from "@src/util/Toast";
+import PropTypes from "prop-types";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { MdMotionPhotosPaused } from "react-icons/md";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import {
-  DeleteBlackList,
-  fetchBlackList,
-} from "@src/store/reducers/BlackList/BlackListSlice";
-import { ToastSuccess } from "@src/util/Toast";
-import { MoveBlackToWaitList } from "@src/store/reducers/BlackList/Move/MoveBlackListSlice";
-import checkPermission from "@src/util/CheckPermission";
-import { clearSelected } from "@src/store/Hook/clearSelection";
 
 const ActionBlacklist = ({ row, closeMenu, HandlerEdit, onRequestDelete }) => {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ const ActionBlacklist = ({ row, closeMenu, HandlerEdit, onRequestDelete }) => {
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchBlackList());
         dispatch(clearSelected());
       });
   };
