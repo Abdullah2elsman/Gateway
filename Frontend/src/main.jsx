@@ -26,6 +26,9 @@ axios.defaults.headers.common["Cache-Control"] = "no-cache, no-store, must-reval
 axios.defaults.headers.common["Pragma"] = "no-cache";
 axios.defaults.headers.common["Expires"] = "0";
 
+// Bypass ngrok browser warning
+axios.defaults.headers.common["ngrok-skip-browser-warning"] = "true";
+
 // Add request interceptor to add timestamp to prevent browser caching
 axios.interceptors.request.use(
   (config) => {
