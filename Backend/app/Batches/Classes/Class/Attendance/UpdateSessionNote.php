@@ -30,8 +30,7 @@ class UpdateSessionNote
 
     public function updateSessionNote(SessionNote $session_note, Request $request, $session_id)
     {
-        try
-        {
+        try {
             $by_branch = false;
 
             $current_session_note = $session_note->where('id', $session_id);
@@ -43,9 +42,8 @@ class UpdateSessionNote
             $current_class = $current_session_note->first()->attendance->class;
 
             $is_authorized = $current_class->trainer_id === $this->current_user->id;
-            
-            if(!$current_session_note->exists() || !$is_authorized || $by_branch)
-            {
+
+            if (!$current_session_note->exists() || !$is_authorized || $by_branch) {
                 return response(['message' => 'Session does not exist'], 400);
             }
 
@@ -60,10 +58,17 @@ class UpdateSessionNote
             $this->notifyUser('has updated a trainee session notes', $this->current_user, 'add_session_notes');
 
             return response(['message' => 'Session note updated successfully.'], 200);
-        }
-        catch(Exception $e)
-        {
-            return response(['message' => "Something went wrong. Session note cannot be updated. Please contact the administrator of the website."], 400);
+        } catch (Exception $e) {
+            \Log::error('UpdateSessionNote Error: ' . $e->getMessage(), [
+                'session_id' => $session_id,
+                'user_id' => $this->current_user->id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response([
+                'message' => "Something went wrong. Session note cannot be updated. Please contact the administrator of the website.",
+                'error' => $e->getMessage() // Remove this line in production
+            ], 400);
         }
     }
 }

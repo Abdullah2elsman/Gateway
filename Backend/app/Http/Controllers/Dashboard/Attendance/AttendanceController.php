@@ -13,6 +13,7 @@ use App\Batches\Classes\Class\Attendance\ViewAttendance;
 use App\Batches\Classes\Class\Attendance\ViewSessionNotes;
 use App\Batches\Classes\Class\Attendance\UpdateSessionNote;
 use App\Batches\Classes\Class\Attendance\ViewOwnAttendance;
+use App\Batches\Classes\Class\Attendance\ToggleSessionStatus;
 
 class AttendanceController extends Controller
 {
@@ -54,5 +55,12 @@ class AttendanceController extends Controller
         $this->attendance['view-own'] = new ViewOwnAttendance($attendance, $this->current_user);
 
         return $this->attendance['view-own']->view($attendance);
+    }
+
+    public function toggleSessionStatus(SessionNote $session_note, $session_id)
+    {
+        $this->attendance['toggle-status'] = new ToggleSessionStatus();
+
+        return $this->attendance['toggle-status']->toggle($session_note, $session_id);
     }
 }
