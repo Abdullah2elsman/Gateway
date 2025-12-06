@@ -284,7 +284,7 @@ export const CloumnsHoldList = () => {
   ];
 };
 
-export const CloumnsWaitList = () => {
+export const CloumnsWaitList = (updateMeta, updateLevel) => {
   return [
     
     {
@@ -375,6 +375,17 @@ export const CloumnsWaitList = () => {
       size: 150,
       enablePinning: false,
       enableEditing: true,
+      muiEditTextFieldProps: ({ row }) => ({
+        onKeyDown: (event) => {
+          if (event.key === "Enter") {
+            event.stopPropagation();
+            updateLevel({
+              level_name: event.target.value,
+              trainee_id: row.original.id,
+            });
+          }
+        },
+      }),
     },
     {
       accessorKey: "payment_type",
@@ -389,6 +400,18 @@ export const CloumnsWaitList = () => {
       size: 150,
       enablePinning: false,
       enableEditing: true,
+      muiEditTextFieldProps: ({ row }) => ({
+        onKeyDown: (event) => {
+          if (event.key === "Enter") {
+            event.stopPropagation();
+            updateMeta({
+              meta_value: event.target.value,
+              meta_key: "paid_value",
+              trainee_id: row.original.id,
+            });
+          }
+        },
+      }),
       filterFn: "between",
     },
     {

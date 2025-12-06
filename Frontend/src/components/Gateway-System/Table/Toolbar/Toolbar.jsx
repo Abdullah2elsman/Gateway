@@ -170,7 +170,7 @@ const Toolbar = ({ table, type, csvData, bulkDelete, setBranch, totalCount, onRe
               }}
             />
             <IconButton title="Export Data">
-              <CSVLink data={csvData} filename="data.csv">
+              <CSVLink data={Array.isArray(csvData) ? csvData : []} filename="data.csv">
                 <BiExport size={30} color="var(--bg-button)" />
               </CSVLink>
             </IconButton>

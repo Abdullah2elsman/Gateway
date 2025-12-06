@@ -68,6 +68,40 @@ export const UpdateWaitList = createAsyncThunk(
   }
 );
 
+// Update Waitlist Meta
+export const updateWaitListMeta = createAsyncThunk(
+  "waitList/updateWaitListMeta",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/dashboard/meta/paid-value/update`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Update Waitlist Level
+export const updateWaitListLevel = createAsyncThunk(
+  "waitList/updateWaitListLevel",
+  async (data, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/dashboard/meta/trainee-level/update`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Delete a one Waitlist
 export const DeleteWaitList = createAsyncThunk(
   "waitList/deleteWaitlist",
@@ -159,6 +193,32 @@ const WaitListSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(UpdateWaitList.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    // Update Waitlist Meta
+    builder
+      .addCase(updateWaitListMeta.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateWaitListMeta.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateWaitListMeta.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    // Update Waitlist Level
+    builder
+      .addCase(updateWaitListLevel.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateWaitListLevel.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateWaitListLevel.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

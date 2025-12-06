@@ -14,6 +14,8 @@ import {
   fetchWaitList,
   UpdateWaitList,
   DeleteWaitList,        // ✅ جديد
+  updateWaitListMeta, // ✅✅ for Meta update
+  updateWaitListLevel, // ✅✅ for Level update
 } from "@src/store/reducers/WaitList/WaitListSlice";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
 import AssignClass from "@src/components/forms/WaitList/Assign Class/AssignClass";
@@ -51,6 +53,24 @@ const WaitList = () => {
         ToastSuccess(message);
         dispatch(fetchWaitList());
         setIsOpenEdit({ isOpen: false });
+      });
+  };
+
+  const handleUpdateMeta = (data) => {
+    dispatch(updateWaitListMeta(data))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        dispatch(fetchWaitList());
+      });
+  };
+
+  const handleUpdateLevel = (data) => {
+    dispatch(updateWaitListLevel(data))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        dispatch(fetchWaitList());
       });
   };
 
@@ -191,7 +211,7 @@ const WaitList = () => {
         {/* Table WaitList */}
         <div className={styles.table}>
           <AdvancedTable
-            columns={CloumnsWaitList()}
+            columns={CloumnsWaitList(handleUpdateMeta, handleUpdateLevel)}
             type="waitlist"
             rows={waitList?.trainees || []}
             Actions={
