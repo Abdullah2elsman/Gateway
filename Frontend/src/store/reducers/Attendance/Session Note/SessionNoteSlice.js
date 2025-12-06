@@ -57,6 +57,24 @@ export const updateSessionNote = createAsyncThunk(
   }
 );
 
+// toggle session status
+export const toggleSessionStatus = createAsyncThunk(
+  "session_note/toggleSessionStatus",
+  async ({ session_id }, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.patch(
+        `${
+          import.meta.env.VITE_API_URL
+        }/dashboard/batches/classes/attendance/${session_id}/toggle`
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const SessionNoteSlice = createSlice({
   name: "session_note",
   initialState: {
@@ -101,6 +119,19 @@ const SessionNoteSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateSessionNote.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    // toggle session status
+    builder
+      .addCase(toggleSessionStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(toggleSessionStatus.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(toggleSessionStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

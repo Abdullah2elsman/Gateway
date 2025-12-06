@@ -28,6 +28,7 @@ import Inbox from "@src/pages/Inbox/Inbox";
 import ForgetPassword from "@src/pages/Auth/ForgetPassword/ForgetPassword";
 import Reset from "@src/pages/Auth/Reset/Reset";
 import Notification from "@src/pages/Notification/Notification";
+import BranchLogs from "@src/pages/Logs/BranchLogs";
 
 const Router = createBrowserRouter([
   {
@@ -97,7 +98,12 @@ const Router = createBrowserRouter([
       },
       {
         path: "/trainess/:id/details",
+        path: "/trainess/:id/details",
         element: <DetailsTrainess />,
+      },
+      {
+        path: "/logs/branch",
+        element: <BranchLogs />,
       },
       {
         path: "/holdlist",

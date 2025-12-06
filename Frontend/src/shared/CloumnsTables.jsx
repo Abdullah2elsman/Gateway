@@ -374,7 +374,7 @@ export const CloumnsWaitList = () => {
       header: "Level",
       size: 150,
       enablePinning: false,
-      enableEditing: false,
+      enableEditing: true,
     },
     {
       accessorKey: "payment_type",

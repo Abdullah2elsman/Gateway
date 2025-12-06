@@ -23,6 +23,7 @@ const AdvancedTable = ({
   onPerPageChange, // Callback for rows per page changes
   currentPage, // Current page from parent
   onRefresh, // Callback to refresh data after bulk actions
+  enableEditing = true, // Default to true to maintain existing behavior
 }) => {
   const dispatch = useDispatch();
 
@@ -190,7 +191,8 @@ const AdvancedTable = ({
         enableCellActions={true}
         enableDensityToggle={false}
         enableFullScreenToggle={false}
-        enableEditing={true}
+        // enableFullScreenToggle={false}
+        enableEditing={enableEditing}
         editDisplayMode="cell"
         columnFilterDisplayMode="popover"
         positionToolbarAlertBanner="head-overlay"
@@ -409,6 +411,7 @@ AdvancedTable.propTypes = {
   onPerPageChange: PropTypes.func, // Callback for rows per page changes
   currentPage: PropTypes.number, // Current page number
   onRefresh: PropTypes.func, // Callback to refresh data after bulk actions
+  enableEditing: PropTypes.bool,
 };
 
 export default AdvancedTable;

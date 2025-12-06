@@ -13,7 +13,7 @@ import { GiSandsOfTime } from "react-icons/gi";
 import { TfiTimer } from "react-icons/tfi";
 import { TbCreditCardRefund } from "react-icons/tb";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaUsers, FaPauseCircle } from "react-icons/fa";
+import { FaUsers, FaPauseCircle, FaHistory } from "react-icons/fa";
 import { PiClockUserFill } from "react-icons/pi";
 import { GoBlocked } from "react-icons/go";
 import { FaLayerGroup } from "react-icons/fa6";
@@ -130,6 +130,18 @@ const Sidebar = ({ darkmode, handleDarkMode, isOpenMenu, isCloseMenu }) => {
                     <li>Trainess</li>
                   </NavLink>
                 )}
+                
+                {/* Branch Logs Link */}
+                 <NavLink
+                    to={"/logs/branch"}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
+                  >
+                    <FaHistory className={styles.icon} />
+                    <li>Branch Logs</li>
+                  </NavLink>
+
                 {!checkPermission({
                   name: "attendance",
                   children: ["view_attendance"],

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearError,
   updateSessionNote,
+  toggleSessionStatus,
 } from "@src/store/reducers/Attendance/Session Note/SessionNoteSlice";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
 import CheckBox from "../Inputs/CheckBox";
@@ -21,6 +22,16 @@ const SessionNotes = ({ row, class_id, type }) => {
 
   const updateSessionNoteForCheckbox = (updateSession) => {
     dispatch(updateSessionNote(updateSession))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        type === "trainer_attendance" && dispatch(fetchAttendanceTrainer());
+        type === "attendance" && dispatch(fetchAttendance({ class_id }));
+      });
+  };
+
+  const toggleSessionUpdate = (session_id) => {
+    dispatch(toggleSessionStatus({ session_id }))
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
@@ -49,10 +60,7 @@ const SessionNotes = ({ row, class_id, type }) => {
               defaultChecked={session.session_status === 0 ? false : true}
               className={styles.list_checkbox}
               handlePermissionChange={(e, v) =>
-                updateSessionNoteForCheckbox({
-                  session_id: session.id,
-                  session_status: v,
-                })
+                toggleSessionUpdate(session.id)
               }
             />
             <input
