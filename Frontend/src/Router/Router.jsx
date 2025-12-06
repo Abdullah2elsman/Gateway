@@ -98,7 +98,6 @@ const Router = createBrowserRouter([
       },
       {
         path: "/trainess/:id/details",
-        path: "/trainess/:id/details",
         element: <DetailsTrainess />,
       },
       {
