@@ -11,7 +11,7 @@ import PendingTestList from "@pages/PendingTestList/PendingTestList";
 import Trainess from "@pages/Trainess/Trainess";
 import DetailsTrainess from "@pages/Trainess/DetailsTrainess";
 import Users from "@pages/Users/Users";
-import PendingUsers from "@pages/PendingUsers/pendingUsers";
+import PendingUsers from "@pages/PendingUsers/PendingUsers";
 import HoldList from "@pages/HoldList/HoldList";
 import Refund from "@pages/Refund/Refund";
 import BlackList from "@pages/BlackList/BlackList";
@@ -97,7 +97,6 @@ const Router = createBrowserRouter([
         element: <Trainess />,
       },
       {
-        path: "/trainess/:id/details",
         path: "/trainess/:id/details",
         element: <DetailsTrainess />,
       },

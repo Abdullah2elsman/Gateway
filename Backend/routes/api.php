@@ -25,6 +25,7 @@ use App\Http\Controllers\Dashboard\Batches\BatchesController;
 use App\Http\Controllers\Dashboard\Batches\Classes\ClassController;
 use App\Http\Controllers\Dashboard\Batches\Classes\ClassesController;
 use App\Http\Controllers\Dashboard\Attendance\AttendanceController;
+use App\Http\Controllers\Dashboard\GeneralMetaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +124,14 @@ Route::prefix('v1')->group(function () {
         Route::prefix('dashboard/trainees')->group(function () {
             Route::get('/', [TraineesController::class, 'view']);
             Route::get('/{trainee_id}', [TraineesController::class, 'viewSingleTrainee']);
+            Route::get('/{trainee_id}/transitions', [\App\Http\Controllers\Dashboard\Trainees\TransitionsController::class, 'viewTraineeTransitions']);
+        });
+
+        // --------------------------------------------------------------------
+        // TRANSITIONS (Branch Transfer History)
+        // --------------------------------------------------------------------
+        Route::prefix('dashboard/transitions')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Dashboard\Trainees\TransitionsController::class, 'viewAllTransitions']);
         });
 
         // --------------------------------------------------------------------
@@ -330,6 +339,13 @@ Route::prefix('v1')->group(function () {
         // SETTINGS
         // --------------------------------------------------------------------
         Route::post('/dashboard/settings/update', [SettingsController::class, 'update']);
+
+        // --------------------------------------------------------------------
+        // METADATA MANAGEMENT
+        // --------------------------------------------------------------------
+        Route::patch('dashboard/meta/paid-value/update', [GeneralMetaController::class, 'updatePaidValue']);
+ 
+        Route::patch('dashboard/meta/trainee-level/update', [GeneralMetaController::class, 'updateTraineeLevel']);
 
         // --------------------------------------------------------------------
         // SEARCH

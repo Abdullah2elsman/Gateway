@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Models\GeneralMeta;
+use App\Models\TraineeMeta;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Trainee;
 
 class GeneralMetaController extends Controller
 {
@@ -14,28 +15,22 @@ class GeneralMetaController extends Controller
     }
 
     /**
-     * Update meta_value based on trainer_id and meta_key
+     * Update meta_value based on trainee_id and meta_key in gt_trainee_metas
      */
-    public function updateMetaValue(Request $request)
+    public function updatePaidValue(Request $request)
     {
         try {
             // Validate the request
             $request->validate([
-                'trainer_id' => 'required|integer|exists:gt_users,id',
+                'trainee_id' => 'required|integer|exists:gt_trainees,id',
                 'meta_key' => 'required|string',
                 'meta_value' => 'required|string',
             ]);
 
-            // Find the meta record by trainer_id and meta_key
-            $meta = GeneralMeta::where('meta_key', $request->meta_key)
-                ->where('id', $request->trainer_id)
+            // Find the meta record by trainee_id and meta_key
+            $meta = TraineeMeta::where('trainee_id', $request->trainee_id)
+                ->where('meta_key', $request->meta_key)
                 ->first();
-
-            if (!$meta) {
-                return response([
-                    'message' => 'Meta record not found with the provided trainer_id and meta_key.'
-                ], 404);
-            }
 
             // Update the meta_value
             $meta->meta_value = $request->meta_value;
@@ -45,6 +40,7 @@ class GeneralMetaController extends Controller
                 'message' => 'Meta value updated successfully.',
                 'data' => [
                     'id' => $meta->id,
+                    'trainee_id' => $meta->trainee_id,
                     'meta_key' => $meta->meta_key,
                     'meta_value' => $meta->meta_value,
                 ]
@@ -63,33 +59,52 @@ class GeneralMetaController extends Controller
     }
 
     /**
-     * Get meta value by trainer_id and meta_key
+     * Update trainee level - creates level if doesn't exist, then assigns to trainee
      */
-    public function getMetaValue(Request $request)
+    public function updateTraineeLevel(Request $request)
     {
         try {
             // Validate the request
             $request->validate([
-                'trainer_id' => 'required|integer',
-                'meta_key' => 'required|string',
+                'trainee_id' => 'required|integer|exists:gt_trainees,id',
+                'level_name' => 'required|string',
             ]);
 
-            // Find the meta record
-            $meta = GeneralMeta::where('meta_key', $request->meta_key)
-                ->where('id', $request->trainer_id)
-                ->first();
+            // Find the trainee
+            $trainee = Trainee::find($request->trainee_id);
 
-            if (!$meta) {
+            if (!$trainee) {
                 return response([
-                    'message' => 'Meta record not found.'
+                    'message' => 'Trainee not found.'
                 ], 404);
             }
 
+            // Check if level exists in gt_generalmeta
+            $level = \App\Models\GeneralMeta::where('meta_key', 'waitlist_levels')
+                ->where('meta_value', $request->level_name)
+                ->first();
+            $isCreated = false;
+            // If level doesn't exist, create it
+            if (!$level) {
+                $level = \App\Models\GeneralMeta::create([
+                    'meta_key' => 'waitlist_levels',
+                    'meta_value' => $request->level_name,
+                ]);
+                $isCreated = true;
+            }
+
+            // Update trainee's level with the level ID
+            $trainee->level = $level->id;
+            $trainee->save();
+
             return response([
+                'message' => 'Trainee level updated successfully.',
                 'data' => [
-                    'id' => $meta->id,
-                    'meta_key' => $meta->meta_key,
-                    'meta_value' => $meta->meta_value,
+                    'trainee_id' => $trainee->id,
+                    'trainee_name' => $trainee->full_name,
+                    'level_id' => $level->id,
+                    'level_name' => $level->meta_value,
+                    'level_created' => $isCreated, // Indicates if level was newly created
                 ]
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -99,7 +114,8 @@ class GeneralMetaController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response([
-                'message' => 'Something went wrong. Please contact the administrator.'
+                'message' => 'Something went wrong. Please contact the administrator.',
+                'error' => $e->getMessage()
             ], 400);
         }
     }

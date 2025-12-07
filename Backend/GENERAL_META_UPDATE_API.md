@@ -1,8 +1,8 @@
-# General Meta Update API
+# Trainee Meta Update API
 
 ## Overview
 
-This API allows you to update `meta_value` in the `gt_generalmeta` table based on `trainer_id` and `meta_key`.
+This API allows you to update `meta_value` in the `gt_trainee_metas` table based on `trainee_id` and `meta_key`.
 
 ---
 
@@ -13,7 +13,7 @@ This API allows you to update `meta_value` in the `gt_generalmeta` table based o
 **Endpoint:**
 
 ```
-PUT http://localhost:8000/api/v1/dashboard/general-meta/update
+PUT http://localhost:8000/api/v1/dashboard/meta
 ```
 
 **Headers:**
@@ -28,41 +28,50 @@ Accept: application/json
 
 ```json
 {
-  "trainer_id": 1,
-  "meta_key": "some_key",
-  "meta_value": "new_value"
+  "trainee_id": 2884,
+  "meta_key": "age_group",
+  "meta_value": "Adult"
 }
 ```
 
 **Parameters:**
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `trainer_id` | integer | Yes | The ID from gt_generalmeta table |
+| `trainee_id` | integer | Yes | The trainee ID from gt_trainees table |
 | `meta_key` | string | Yes | The meta_key to identify the record |
 | `meta_value` | string | Yes | The new value to set |
 
-**Success Response (200):**
+**Success Response (200 - Updated):**
 
 ```json
 {
   "message": "Meta value updated successfully.",
   "data": {
     "id": 1,
-    "meta_key": "some_key",
-    "meta_value": "new_value"
+    "trainee_id": 2884,
+    "meta_key": "age_group",
+    "meta_value": "Adult"
+  }
+}
+```
+
+**Success Response (201 - Created):**
+
+```json
+{
+  "message": "Meta value created successfully.",
+  "data": {
+    "id": 1,
+    "trainee_id": 2884,
+    "meta_key": "age_group",
+    "meta_value": "Adult"
   }
 }
 ```
 
 **Error Responses:**
 
-**404 - Not Found:**
-
-```json
-{
-  "message": "Meta record not found with the provided trainer_id and meta_key."
-}
-```
+**Note:** If the record doesn't exist, it will be automatically created with a 201 status.
 
 **422 - Validation Error:**
 
@@ -70,7 +79,7 @@ Accept: application/json
 {
   "message": "Validation failed.",
   "errors": {
-    "trainer_id": ["The trainer_id field is required."],
+    "trainee_id": ["The trainee_id field is required."],
     "meta_key": ["The meta_key field is required."],
     "meta_value": ["The meta_value field is required."]
   }
@@ -84,7 +93,7 @@ Accept: application/json
 **Endpoint:**
 
 ```
-GET http://localhost:8000/api/v1/dashboard/general-meta/get
+GET http://localhost:8000/api/v1/dashboard/meta
 ```
 
 **Headers:**
@@ -97,13 +106,13 @@ Accept: application/json
 **Query Parameters:**
 
 ```
-?trainer_id=1&meta_key=some_key
+?trainee_id=2884&meta_key=age_group
 ```
 
 **Parameters:**
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `trainer_id` | integer | Yes | The ID from gt_generalmeta table |
+| `trainee_id` | integer | Yes | The trainee ID from gt_trainees table |
 | `meta_key` | string | Yes | The meta_key to identify the record |
 
 **Success Response (200):**
@@ -112,8 +121,9 @@ Accept: application/json
 {
   "data": {
     "id": 1,
-    "meta_key": "some_key",
-    "meta_value": "current_value"
+    "trainee_id": 2884,
+    "meta_key": "age_group",
+    "meta_value": "Adult"
   }
 }
 ```
@@ -135,13 +145,13 @@ Accept: application/json
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8000/api/v1/dashboard/general-meta/update \
+curl -X PUT http://localhost:8000/api/v1/dashboard/meta \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "trainer_id": 5,
-    "meta_key": "level",
-    "meta_value": "Advanced"
+    "trainee_id": 2884,
+    "meta_key": "age_group",
+    "meta_value": "Adult"
   }'
 ```
 
@@ -152,8 +162,9 @@ curl -X PUT http://localhost:8000/api/v1/dashboard/general-meta/update \
   "message": "Meta value updated successfully.",
   "data": {
     "id": 5,
-    "meta_key": "level",
-    "meta_value": "Advanced"
+    "trainee_id": 2884,
+    "meta_key": "age_group",
+    "meta_value": "Adult"
   }
 }
 ```
@@ -165,7 +176,7 @@ curl -X PUT http://localhost:8000/api/v1/dashboard/general-meta/update \
 **Request:**
 
 ```bash
-curl -X GET "http://localhost:8000/api/v1/dashboard/general-meta/get?trainer_id=5&meta_key=level" \
+curl -X GET "http://localhost:8000/api/v1/dashboard/meta?trainer_id=5&meta_key=level" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Accept: application/json"
 ```
@@ -189,7 +200,7 @@ curl -X GET "http://localhost:8000/api/v1/dashboard/general-meta/get?trainer_id=
 ### Update Meta Value
 
 1. **Method:** PUT
-2. **URL:** `http://localhost:8000/api/v1/dashboard/general-meta/update`
+2. **URL:** `http://localhost:8000/api/v1/dashboard/meta`
 3. **Headers:**
    - `Authorization`: `Bearer YOUR_TOKEN`
    - `Content-Type`: `application/json`
@@ -209,7 +220,7 @@ curl -X GET "http://localhost:8000/api/v1/dashboard/general-meta/get?trainer_id=
 ### Get Meta Value
 
 1. **Method:** GET
-2. **URL:** `http://localhost:8000/api/v1/dashboard/general-meta/get`
+2. **URL:** `http://localhost:8000/api/v1/dashboard/meta`
 3. **Headers:**
    - `Authorization`: `Bearer YOUR_TOKEN`
    - `Accept`: `application/json`

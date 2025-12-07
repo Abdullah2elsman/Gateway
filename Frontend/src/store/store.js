@@ -28,6 +28,7 @@ import SessionNoteSlice from "./reducers/Attendance/Session Note/SessionNoteSlic
 import AnnouncementsSlice from "./reducers/Announcements/AnnouncementsSlice";
 import SettingsSlice from "./reducers/Settings/SettingsSlice";
 import NotificationsSlice from "./reducers/Notification/NotificationSlice";
+import LogsSlice from "./reducers/LogsOperations/LogsSlice";
 
 // Hook
 import clearSelection from "./Hook/clearSelection";
@@ -63,6 +64,7 @@ const store = configureStore({
     Announcements: AnnouncementsSlice,
     settings: SettingsSlice,
     notifications: NotificationsSlice,
+    logsOperations: LogsSlice,
 
     // Hooks
     clearSelection: clearSelection,

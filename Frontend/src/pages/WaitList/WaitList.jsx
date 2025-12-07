@@ -6,7 +6,7 @@ import Modals from "@src/components/Gateway-System/Modals/Modals";
 import FormTrainee from "@src/components/forms/WaitList/Trainee/FormTrainee";
 import AdvancedTable from "@src/components/Gateway-System/Table/AdvancedTable";
 import { CloumnsWaitList } from "@src/shared/CloumnsTables";
-import ActionWaitlist from "@src/components/Gateway-System/Table/Actions/ActionWaitlist";
+import ActionWaitlist from "@src/components/Gateway-System/Table/Actions/ActionWaitList";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearError,
@@ -14,6 +14,8 @@ import {
   fetchWaitList,
   UpdateWaitList,
   DeleteWaitList,        // ✅ جديد
+  updateWaitListMeta, // ✅✅ for Meta update
+  updateWaitListLevel, // ✅✅ for Level update
 } from "@src/store/reducers/WaitList/WaitListSlice";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
 import AssignClass from "@src/components/forms/WaitList/Assign Class/AssignClass";
@@ -51,6 +53,24 @@ const WaitList = () => {
         ToastSuccess(message);
         dispatch(fetchWaitList());
         setIsOpenEdit({ isOpen: false });
+      });
+  };
+
+  const handleUpdateMeta = (data) => {
+    dispatch(updateWaitListMeta(data))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        dispatch(fetchWaitList());
+      });
+  };
+
+  const handleUpdateLevel = (data) => {
+    dispatch(updateWaitListLevel(data))
+      .unwrap()
+      .then(({ message }) => {
+        ToastSuccess(message);
+        dispatch(fetchWaitList());
       });
   };
 
@@ -191,7 +211,7 @@ const WaitList = () => {
         {/* Table WaitList */}
         <div className={styles.table}>
           <AdvancedTable
-            columns={CloumnsWaitList()}
+            columns={CloumnsWaitList(handleUpdateMeta, handleUpdateLevel)}
             type="waitlist"
             rows={waitList?.trainees || []}
             Actions={
