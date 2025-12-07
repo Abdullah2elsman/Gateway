@@ -4,7 +4,7 @@ import PathName from "@src/components/Gateway-System/PathName/PathName";
 import styles from "@styles/Details.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchBranchLogs, clearError } from "@src/store/reducers/Logs/LogsSlice";
+import { fetchBranchLogs, clearError } from "@src/store/reducers/LogsOperations/LogsSlice";
 import { ToastError } from "@src/util/Toast";
 
 const BranchLogs = () => {
