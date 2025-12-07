@@ -16,7 +16,7 @@ import {
 import ActionRole from "@src/components/Gateway-System/Table/Actions/ActionRole";
 import AddButton from "@src/components/Gateway-System/AddButton/AddButton";
 import Modals from "@src/components/Gateway-System/Modals/Modals";
-import FormRole from "@src/components/forms/Role/formRole";
+import FormRole from "@src/components/forms/Role/FormRole";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
 import { Navigate, useOutletContext } from "react-router-dom";
 import checkPermission from "@src/util/CheckPermission";
