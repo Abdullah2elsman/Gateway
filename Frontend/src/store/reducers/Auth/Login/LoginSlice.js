@@ -14,7 +14,6 @@ export const createLogin = createAsyncThunk(
         user
       );
 
-      console.log(res.data);
       if (res.data) {
         let in6Hours = new Date(new Date().getTime() + 360 * 60 * 1000);
 

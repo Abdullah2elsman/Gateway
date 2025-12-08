@@ -9,7 +9,7 @@ import { ToastError } from "@src/util/Toast";
 
 const BranchLogs = () => {
   const dispatch = useDispatch();
-  const { logs, isLoading, error } = useSelector((state) => state.logs);
+  const { logs, isLoading, error } = useSelector((state) => state.logsOperations);
 
   useEffect(() => {
     dispatch(fetchBranchLogs());

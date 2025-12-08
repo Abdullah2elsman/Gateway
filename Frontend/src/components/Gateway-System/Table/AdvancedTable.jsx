@@ -309,11 +309,15 @@ const AdvancedTable = ({
           );
         }}
         muiTablePaperProps={{
+          elevation: 0,
           sx: {
             width: "100%",
-            overflow: "auto !important",
-            borderRadius: "10px",
+            overflow: "hidden",
+            borderRadius: "12px",
             backgroundColor: "var(--bg-sidebar) !important",
+            // Soft shadow, no border for "card" look
+            boxShadow: "0 4px 20px rgba(0,0,0,0.05) !important", 
+            border: "none",
             "& .MuiTypography-root": {
               color: "var(--text-black) !important",
             },
@@ -321,9 +325,9 @@ const AdvancedTable = ({
               color: "var(--text-gray) !important",
             },
             "& .css-118d58w-MuiButtonBase-root-MuiTableSortLabel-root .MuiTableSortLabel-icon":
-            {
-              color: "var(--text-black) !important",
-            },
+              {
+                color: "var(--text-black) !important",
+              },
             "& .css-142h5t9-MuiFormLabel-root-MuiInputLabel-root": {
               color: "var(--text-black) !important",
             },
@@ -335,55 +339,64 @@ const AdvancedTable = ({
             },
             "& .css-1io6e0z-MuiTableRow-root td[data-pinned=true]:before": {
               background: "var(--bg-sidebar) !important",
-              color: "var(--text-black) !important",
             },
             "& .css-gcpdls-MuiTableCell-root[data-pinned=true]:before": {
               background: "var(--bg-sidebar) !important",
-              color: "var(--text-black) !important",
-            },
-            "& .css-1yg0dk4-MuiInputBase-root-MuiOutlinedInput-root": {
-              color: "var(--text-black) !important",
             },
             "& .css-10q6jkf-MuiTableCell-root[data-pinned=true]:before": {
               background: "var(--bg-sidebar) !important",
-            },
-            ".css-1vbcmy6-MuiTableRow-root td[data-pinned=true]:before": {
-              background: "var(--bg-sidebar) !important",
-              color: "var(--text-black) !important",
             },
           },
         }}
         muiTableContainerProps={{
           sx: {
             maxHeight: "80vh",
-            overflowY: "auto",
-            overflowX: "auto",
             backgroundColor: "var(--bg-sidebar) !important",
-            "& .css-h6lbh0-MuiTableCell-root[data-pinned=true]:before": {
-              backgroundColor: "var(--bg-sidebar) !important",
-            },
           },
         }}
-        muiTableHeadRowProps={{
+        // Default rendering for empty cells
+        defaultColumn={{
+          Cell: ({ cell }) => {
+            const val = cell.getValue();
+            return val === null || val === undefined || val === "" ? "-" : val;
+          },
+        }}
+
+        muiTableHeadCellProps={{
           sx: {
-            backgroundColor: "var(--bg-sidebar) !important",
-            "& .MuiTableCell-root": {
-              backgroundColor: "var(--bg-sidebar) !important",
-              color: "var(--text-black) !important",
-            },
+            backgroundColor: "rgba(0, 0, 0, 0.02) !important", // Subtle header bg
+            color: "var(--text-black) !important",
+            fontWeight: "700 !important", // Bold
+            fontSize: "0.9rem",
+            borderBottom: "1px solid var(--border-primary) !important",
+            borderRight: "1px solid rgba(224, 224, 224, 0.4) !important", // Light separator
           },
         }}
         muiTableBodyRowProps={{
           sx: {
             backgroundColor: "var(--bg-sidebar) !important",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.01) !important",
+              // Interactive colored strip on hover
+              boxShadow: "inset 4px 0 0 var(--bg-active)", 
+            },
             "& .MuiTableCell-root": {
               color: "var(--text-black) !important",
             },
           },
         }}
+        muiTableBodyCellProps={{
+          sx: {
+            borderBottom: "1px solid var(--border-primary) !important",
+            borderRight: "1px solid rgba(224, 224, 224, 0.4) !important", // Light separator
+            padding: "14px 16px", // Slightly more breathing room
+          },
+        }}
         muiBottomToolbarProps={{
           sx: {
             backgroundColor: "var(--bg-sidebar) !important",
+            borderTop: "1px solid var(--border-secondary) !important", // Separator for footer
             "& .MuiAlert-root": {
               backgroundColor: "var(--bg-sidebar) !important",
               color: "var(--text-black) !important",
