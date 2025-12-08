@@ -26,12 +26,13 @@ class GeneralMetaController extends Controller
                 'meta_key' => 'required|string',
                 'meta_value' => 'required|string',
             ]);
-
+            
             // Find the meta record by trainee_id and meta_key
             $meta = TraineeMeta::where('trainee_id', $request->trainee_id)
-                ->where('meta_key', $request->meta_key)
-                ->first();
-
+            ->where('meta_key', "paid_value")
+            ->first();
+            
+            // $request->meta_key = "paid_value";
             // Update the meta_value
             $meta->meta_value = $request->meta_value;
             $meta->save();
