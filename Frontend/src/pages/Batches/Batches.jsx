@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+// /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from "react";
 import styles from "@styles/Batches.module.css";
 import { GoArchive, GoKebabHorizontal } from "react-icons/go";
@@ -39,7 +39,19 @@ const Batches = () => {
     isOpen: false,
     batch: null,
   });
-  const [branch, setBranch] = useState("");
+
+  // ✅ NEW: storage key لحفظ اختيار الـ Branch
+  const BRANCH_STORAGE_KEY = "batches_selected_branch";
+
+  // ✅ تعديل: نخلي الـ branch يبدأ بالقيمة المحفوظة لو موجودة
+  const [branch, setBranch] = useState(() => {
+    try {
+      const saved = localStorage.getItem(BRANCH_STORAGE_KEY);
+      return saved ?? "";
+    } catch {
+      return "";
+    }
+  });
 
   // state for delete confirmation popup
   const [deleteBatchId, setDeleteBatchId] = useState(null);
@@ -55,6 +67,15 @@ const Batches = () => {
     dispatch(fetchBatches(branch));
     dispatch(getBranchesAllPages());
   }, [dispatch, branch]);
+
+  // ✅ NEW: حفظ اختيار الـ branch في localStorage كل ما يتغير
+  useEffect(() => {
+    try {
+      localStorage.setItem(BRANCH_STORAGE_KEY, branch ?? "");
+    } catch {
+      // ignore
+    }
+  }, [branch]);
 
   const DetailsBatch = (batch) => {
     navigate(`/batch/${batch.id}`, {
@@ -176,7 +197,8 @@ const Batches = () => {
               <Branch
                 label={true}
                 branches={page_branches.branches}
-                current_branch={""}
+                // ✅ زي ما انت عاملها: يعرض اللي متخزن
+                current_branch={branch}
                 display="inline"
                 setBranch={setBranch}
               />

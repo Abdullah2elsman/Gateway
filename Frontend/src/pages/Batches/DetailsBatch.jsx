@@ -45,6 +45,45 @@ const DetailsBatch = () => {
   const dispatch = useDispatch();
   const { classes, loading, error } = useSelector((state) => state.classes);
 
+  // ✅ NEW: حفظ فلاتر الـ FilterClasses لكل Batch
+  const FILTERS_KEY = `batch_${state?.id || "default"}_classes_filters`;
+
+  // ✅ NEW: states للفلاتر (خليها بسيطة strings/ids)
+  const [filters, setFilters] = useState({
+    type: "",
+    gate: "",
+    slot: "",
+    level: "",
+    trainer: "",
+  });
+
+  // ✅ NEW: load filters لما الصفحة تفتح
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(FILTERS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          setFilters((prev) => ({
+            ...prev,
+            ...parsed,
+          }));
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load class filters from localStorage", e);
+    }
+  }, [FILTERS_KEY]);
+
+  // ✅ NEW: save filters أي تغيير
+  useEffect(() => {
+    try {
+      localStorage.setItem(FILTERS_KEY, JSON.stringify(filters));
+    } catch (e) {
+      console.warn("Failed to save class filters to localStorage", e);
+    }
+  }, [FILTERS_KEY, filters]);
+
   useEffect(() => {
     dispatch(filterClasses({ batch_id: state?.id }));
 
@@ -173,7 +212,12 @@ const DetailsBatch = () => {
 
       {/* Classes  */}
       <div className={styles.Classes}>
-        <FilterClasses batch_id={state?.id} />
+        {/* ✅ FilterClasses هو اللي فيه dropdowns — وبنمررله فلاتر محفوظة لو بيدعم */}
+        <FilterClasses
+          batch_id={state?.id}
+          savedFilters={filters}
+          onFiltersChange={setFilters}
+        />
 
         <div className={styles.Classes_title}>
           <div className={styles.title}>

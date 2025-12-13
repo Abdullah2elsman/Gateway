@@ -17,6 +17,7 @@ const TimeSlotsClasses = ({
   defaultValue,
   attend_type,
   required,
+  showRemoveButton = false, // ✅ NEW: configurable remove button
 }) => {
   const dispatch = useDispatch();
   const { timeSlots_classes, error, isLoading } = useSelector(
@@ -88,6 +89,7 @@ const TimeSlotsClasses = ({
       }))}
       placeholder="Time Slot"
       Button={Button}
+      showRemoveButton={showRemoveButton}
       onSubmitNew={AddNewTimeSlottoClasses}
       onDelete={deleteTimeSlotHandler}
       onChange={(e) => setStateId(Number(e.target.dataset.value))}
@@ -105,6 +107,7 @@ TimeSlotsClasses.propTypes = {
   label: PropTypes.string,
   Button: PropTypes.bool,
   required: PropTypes.bool,
+  showRemoveButton: PropTypes.bool,
 };
 
 export default TimeSlotsClasses;

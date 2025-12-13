@@ -38,6 +38,9 @@ const AdvancedTable = ({
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]); // [{id, desc}]
 
+  // ✅ NEW: state لحفظ إخفاء الأعمدة
+  const [columnVisibility, setColumnVisibility] = useState({});
+
   // Check if we're using server-side pagination
   const isServerSidePagination = Boolean(serverPagination && onPageChange);
 
@@ -55,6 +58,64 @@ const AdvancedTable = ({
 
   // ✅ state للـ selection عشان نقدر نحفظه
   const [rowSelection, setRowSelection] = useState({});
+
+  // ✅ NEW: function لمسح الـ selection (بنفس منطقك القديم بدون ما نهدمه)
+  const clearRowSelection = () => {
+    try {
+      setRowSelection({});
+      const inst = tableRef.current;
+
+      if (!inst) return;
+
+      if (typeof inst.resetRowSelection === "function") {
+          try {
+            inst.resetRowSelection();
+          } catch {
+            /* ignore */
+          }
+        }
+
+        if (typeof inst.setRowSelection === "function") {
+          try {
+            inst.setRowSelection({});
+          } catch {
+            /* ignore */
+          }
+        }
+
+        if (typeof inst.setState === "function") {
+          try {
+            inst.setState((prev) => ({ ...prev, rowSelection: {} }));
+          } catch {
+            /* ignore */
+          }
+        }
+
+        if (typeof inst.dispatch === "function") {
+          try {
+            inst.dispatch({ type: "mrt/resetRowSelection" });
+          } catch {
+            /* ignore */
+          }
+        }
+        } catch {
+          console.warn("Failed to clear row selection safely");
+        }
+
+          };
+
+  // ✅ NEW: RowId ثابت لمنع إن السيليكت ينتقل للي بعدهم بعد حذف/نقل صفوف
+  const getStableRowId = (row, index) => {
+    // اختار أي key موجود عندك في الداتا (id غالبًا موجود)
+    return (
+      row?.id ??
+      row?.user_id ??
+      row?.trainee_id ??
+      row?.uuid ??
+      // fallback آخر حل (مش مفضل) لكن موجود عشان ما نكسرش حاجة
+      `${type || "row"}_${index}`
+    );
+  };
 
   // عند أول تحميل للكومبوننت: قراءة كل الإعدادات من localStorage
   useEffect(() => {
@@ -81,13 +142,17 @@ const AdvancedTable = ({
         if (parsed.rowSelection && typeof parsed.rowSelection === "object") {
           setRowSelection(parsed.rowSelection);
         }
+        // ✅ NEW: استرجاع الـ columnVisibility
+        if (parsed.columnVisibility && typeof parsed.columnVisibility === "object") {
+          setColumnVisibility(parsed.columnVisibility);
+        }
       }
     } catch (err) {
       console.warn("Failed to load table state from localStorage", err);
     }
   }, [STORAGE_KEY]);
 
-  // كل ما أي حاجة تتغير (فلتر / سورت / باجينيشن / سيلكشن) نحفظها في localStorage
+  // كل ما أي حاجة تتغير (فلتر / سورت / باجينيشن / سيلكشن / هايد) نحفظها في localStorage
   useEffect(() => {
     try {
       const payload = JSON.stringify({
@@ -95,13 +160,22 @@ const AdvancedTable = ({
         globalFilter,
         sorting,
         pagination,
-        rowSelection, // ✅ جديد
+        rowSelection, // ✅ قديم (سيبناه زي ما هو)
+        columnVisibility, // ✅ NEW
       });
       localStorage.setItem(STORAGE_KEY, payload);
     } catch (err) {
       console.warn("Failed to save table state to localStorage", err);
     }
-  }, [STORAGE_KEY, columnFilters, globalFilter, sorting, pagination, rowSelection]);
+  }, [
+    STORAGE_KEY,
+    columnFilters,
+    globalFilter,
+    sorting,
+    pagination,
+    rowSelection,
+    columnVisibility,
+  ]);
 
   // نستخدم useMemo عشان الأعمدة والسطور ما تتغيرش بالـ reference كل ريندر
   const memoColumns = useMemo(() => columns, [columns]);
@@ -178,6 +252,10 @@ const AdvancedTable = ({
       <MaterialReactTable
         // نحفظ المرجع هنا (ستستخدمه الـ listener)
         tableInstanceRef={tableRef}
+
+        // ✅ NEW: ده أهم سطر لمنع انتقال السيليكت للّي بعدهم بعد حذف/نقل
+        getRowId={getStableRowId}
+
         multiple
         columns={memoColumns}
         data={memoRows}
@@ -197,9 +275,6 @@ const AdvancedTable = ({
         columnFilterDisplayMode="popover"
         positionToolbarAlertBanner="head-overlay"
         paginationDisplayMode="pages"
-        // ❌ مفيش virtualization (كان بيبوظ الهيدر عندك)
-        // enableRowVirtualization={true}
-        // enableColumnVirtualization={true}
 
         // ⭐ التحكم في أعمدة النظام (#, checkbox, actions)
         displayColumnDefOptions={{
@@ -225,6 +300,9 @@ const AdvancedTable = ({
 
         // ✅ ربط الـ selection بالـ state عشان يتحفظ ويتقري
         onRowSelectionChange={setRowSelection}
+
+        // ✅ NEW: حفظ Hide Columns
+        onColumnVisibilityChange={setColumnVisibility}
 
         // نتحكم في الفلاتر / السورت / الباجينيشن من خلال state
         onColumnFiltersChange={setColumnFilters}
@@ -282,6 +360,7 @@ const AdvancedTable = ({
           sorting: sorting,
           pagination: isServerSidePagination ? serverPaginationState : pagination,
           rowSelection: rowSelection, // ✅ مهم
+          columnVisibility: columnVisibility, // ✅ NEW
         }}
         renderRowActionMenuItems={({ closeMenu, row }) => [
           <div key={row.id}>
@@ -304,7 +383,18 @@ const AdvancedTable = ({
               bulkDelete={bulkDelete}
               setBranch={setBranch}
               totalCount={isServerSidePagination ? serverPagination?.total : memoRows?.length}
-              onRefresh={onRefresh}
+
+              // ✅ NEW: نخلي أي أكشن ينجح → يمسح السيليكت + يريفريش
+              onAfterBulkAction={() => {
+                clearRowSelection();
+              }}
+
+              // ✅ onRefresh القديم كما هو (بس لفّيناه)
+              onRefresh={() => {
+                // لما يحصل refresh بعد الأكشن: نمسح السيليكت
+                clearRowSelection();
+                if (typeof onRefresh === "function") onRefresh();
+              }}
             />
           );
         }}
@@ -316,7 +406,7 @@ const AdvancedTable = ({
             borderRadius: "12px",
             backgroundColor: "var(--bg-sidebar) !important",
             // Soft shadow, no border for "card" look
-            boxShadow: "0 4px 20px rgba(0,0,0,0.05) !important", 
+            boxShadow: "0 4px 20px rgba(0,0,0,0.05) !important",
             border: "none",
             "& .MuiTypography-root": {
               color: "var(--text-black) !important",
@@ -379,7 +469,7 @@ const AdvancedTable = ({
             "&:hover": {
               backgroundColor: "rgba(0,0,0,0.01) !important",
               // Interactive colored strip on hover
-              boxShadow: "inset 4px 0 0 var(--bg-active)", 
+              boxShadow: "inset 4px 0 0 var(--bg-active)",
             },
             "& .MuiTableCell-root": {
               color: "var(--text-black) !important",

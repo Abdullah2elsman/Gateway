@@ -16,6 +16,7 @@ const LevelClasses = ({
   setStateId,
   defaultValue,
   required,
+  showRemoveButton = false, // ✅ NEW: configurable remove button
 }) => {
   const dispatch = useDispatch();
   const { Classes_levels, error, loading } = useSelector(
@@ -87,6 +88,7 @@ const LevelClasses = ({
       }))}
       placeholder="Level"
       Button={Button}
+      showRemoveButton={showRemoveButton}
       onSubmitNew={AddNewLeveltoClasses}
       onDelete={deleteLevelHandler}
       onChange={(e) => setStateId(Number(e.target.dataset.value))}
@@ -103,6 +105,7 @@ LevelClasses.propTypes = {
   label: PropTypes.string,
   Button: PropTypes.bool,
   required: PropTypes.bool,
+  showRemoveButton: PropTypes.bool,
 };
 
 export default LevelClasses;

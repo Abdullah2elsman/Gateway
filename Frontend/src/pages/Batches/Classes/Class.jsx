@@ -230,7 +230,14 @@ const Class = () => {
             isLoading={loading}
             enableRowSelection={true}
             enableRowActions={true}
-            type="class"
+
+            // ✅ تعديل مهم: يخلي حفظ الأكشنات unique لكل Class (بدل ما كل الكلاسات تشترك)
+            type={`class_${state?.batchId}_${state?.class_id}`}
+
+            // ✅ اختياري: لو AdvancedTable بيستخدم onRefresh لمسح selection بعد actions
+            onRefresh={() => {
+              dispatch(fetchClass({ batch_id: state.batchId, class_id: state.class_id }));
+            }}
           />
         </div>
       </div>

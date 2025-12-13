@@ -1,16 +1,16 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
 import { Box, Button } from "@mui/material";
-import Select from "@src/components/Gateway-System/Inputs/Select";
-import LevelClasses from "@src/components/Gateway-System/Inputs/Classes/Level Classes/LevelClasses";
+import Branch from "@src/components/Gateway-System/Inputs/Branch";
 import GateClasses from "@src/components/Gateway-System/Inputs/Classes/Gate Classes/GateClasses";
+import LevelClasses from "@src/components/Gateway-System/Inputs/Classes/Level Classes/LevelClasses";
 import TimeSlotsClasses from "@src/components/Gateway-System/Inputs/Classes/TimeSlots Classes/TimeSlotsClasses";
 import TrainerClasses from "@src/components/Gateway-System/Inputs/Classes/TrainerClasses/TrainerClasses";
-import Spinner from "@src/components/Gateway-System/Spinner/Spinner";
 import Input from "@src/components/Gateway-System/Inputs/Input";
-import { useSelector } from "react-redux";
+import Select from "@src/components/Gateway-System/Inputs/Select";
+import Spinner from "@src/components/Gateway-System/Spinner/Spinner";
 import checkPermission from "@src/util/CheckPermission";
-import Branch from "@src/components/Gateway-System/Inputs/Branch";
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const AddClasses = ({ onSubmit, isLoading, Class, edit }) => {
   const [level_id, setLevelID] = useState("");
@@ -107,6 +107,7 @@ const AddClasses = ({ onSubmit, isLoading, Class, edit }) => {
         <GateClasses
           label="Gate"
           Button={true}
+          showRemoveButton={true}
           setStateId={setGateID}
           defaultValue={Class?.gate}
           required={false}
@@ -118,6 +119,7 @@ const AddClasses = ({ onSubmit, isLoading, Class, edit }) => {
           defaultValue={Class?.time_slot}
           attend_type={attend_type || Class?.class_type}
           Button={true}
+          showRemoveButton={true}
           required={true}
         />
 
@@ -133,6 +135,7 @@ const AddClasses = ({ onSubmit, isLoading, Class, edit }) => {
           setStateId={setLevelID}
           defaultValue={Class?.level}
           Button={true}
+          showRemoveButton={true}
           required={false}
         />
 

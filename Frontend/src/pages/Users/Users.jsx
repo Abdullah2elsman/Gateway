@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "@styles/styles.module.css";
 import PathName from "@components/Gateway-System/PathName/PathName";
 import AddButton from "@components/Gateway-System/AddButton/AddButton";
@@ -14,14 +14,14 @@ import {
   createUser,
   fetchUsers,
   updateUser,
-  deleteUser, // ✅ جديد
+  deleteUser,
 } from "@src/store/reducers/Users/UsersSlice";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
 import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import checkPermission from "@src/util/CheckPermission";
 import { Helmet } from "react-helmet";
-import { clearSelected } from "@src/store/Hook/clearSelection"; // ✅ جديد
-import ConfirmDelete from "@src/components/feedback/Alert/ConfirmDelete"; // ✅ جديد
+import { clearSelected } from "@src/store/Hook/clearSelection";
+import ConfirmDelete from "@src/components/feedback/Alert/ConfirmDelete";
 
 const Users = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +40,26 @@ const Users = () => {
   useEffect(() => {
     dispatch(fetchUsers(branch));
   }, [dispatch, branch]);
+
+  // ✅ NEW: ترتيب اليوزرز بحيث الجديد يطلع فوق
+  const sortedUsers = useMemo(() => {
+    const list = Array.isArray(users?.users) ? [...users.users] : [];
+
+    list.sort((a, b) => {
+      const aDate = a?.created_at ? new Date(a.created_at).getTime() : null;
+      const bDate = b?.created_at ? new Date(b.created_at).getTime() : null;
+
+      // لو عندنا created_at: الأحدث أولاً
+      if (aDate && bDate) return bDate - aDate;
+
+      // fallback: الأكبر id أولاً
+      const aId = Number(a?.id ?? 0);
+      const bId = Number(b?.id ?? 0);
+      return bId - aId;
+    });
+
+    return list;
+  }, [users?.users]);
 
   const HandlerEdit = (row) => {
     setIsOpenEdit(true);
@@ -107,6 +127,7 @@ const Users = () => {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
     let user;
+
     if (data.second_Phone.replace(/\s/g, "")) {
       user = {
         full_name: data.full_name,
@@ -207,7 +228,6 @@ const Users = () => {
         <title>{`${context} | Users`}</title>
       </Helmet>
 
-      {/* ✅ Popup التأكيد */}
       <ConfirmDelete
         open={!!rowToDelete}
         onClose={handleCancelDelete}
@@ -261,7 +281,6 @@ const Users = () => {
                 openAddModal={() => setIsOpen(true)}
               />
 
-              {/* Add User in Modal */}
               <Modals isOpen={isOpen} handleClose={() => setIsOpen(false)}>
                 <AddUser
                   onSubmit={onSubmit}
@@ -273,7 +292,6 @@ const Users = () => {
           )}
         </div>
 
-        {/* Edit User in Modal */}
         {checkPermission({
           name: "users",
           children: [
@@ -282,10 +300,7 @@ const Users = () => {
             "update_own_users",
           ],
         }) && (
-          <Modals
-            isOpen={isOpenEdit}
-            handleClose={() => setIsOpenEdit(false)}
-          >
+          <Modals isOpen={isOpenEdit} handleClose={() => setIsOpenEdit(false)}>
             <AddUser
               updateUser={updateUsers}
               onSubmit={onSubmitEdit}
@@ -295,15 +310,14 @@ const Users = () => {
           </Modals>
         )}
 
-        {/* Table Users */}
         <div className={styles.table}>
           <AdvancedTable
             columns={CloumnsUsers()}
-            rows={users?.users ? users?.users : ""}
+            rows={sortedUsers}
             Actions={
               <ActionUsers
                 HandlerEdit={HandlerEdit}
-                onRequestDelete={handleRequestDelete} // ✅ مهم
+                onRequestDelete={handleRequestDelete}
               />
             }
             isLoading={isLoading}

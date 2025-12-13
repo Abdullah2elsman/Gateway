@@ -14,6 +14,25 @@
   direction: ltr;
 }
 
+.resetBtn {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg-active); /* نفس لون أزرارك */
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.resetBtn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+
 @media (max-width: 991px) {
   .filter_classes .filter_wapper {
     flex-wrap: wrap;
