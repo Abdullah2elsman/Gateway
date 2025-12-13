@@ -76,7 +76,7 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const { error, isLoading, success } = useSelector((state) => state.register);
   const { settings } = useSelector((state) => state.settings);
-
+  console.log(User)
   useEffect(() => {
     dispatch(fetchSettings());
   }, [dispatch]);

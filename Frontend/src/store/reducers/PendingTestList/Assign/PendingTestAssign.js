@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Get All Levels Assign
@@ -68,6 +68,25 @@ export const updatePendingTestAssignLevel = createAsyncThunk(
     }
   }
 );
+
+// remove Assign Level for paddingTest
+export const removePendingTestAssignLevel = createAsyncThunk(
+  "pendingTestAssign/removePendingTestAssignLevel",
+  async (trainee_id, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/dashboard/pendinglist/${trainee_id}/assign-level`,
+        { level: null }
+      );
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+
 
 // update Assign Trainer for paddingTest
 export const updatePendingTestAssignTrainer = createAsyncThunk(
@@ -210,6 +229,19 @@ const PendingTestAssignSlice = createSlice({
         state.error = action.payload;
       });
 
+    // remove assign level
+    builder
+      .addCase(removePendingTestAssignLevel.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(removePendingTestAssignLevel.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(removePendingTestAssignLevel.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
     // update assign trainer
     builder
       .addCase(updatePendingTestAssignTrainer.pending, (state) => {
@@ -277,6 +309,8 @@ const PendingTestAssignSlice = createSlice({
         state.Loading_reset = false;
         state.error = action.payload;
       });
+
+
   },
 });
 

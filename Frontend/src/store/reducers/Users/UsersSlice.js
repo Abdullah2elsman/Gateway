@@ -24,6 +24,7 @@ export const createUser = createAsyncThunk(
   async (user, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
+      console.log(user);
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/dashboard/users/create`,
         user

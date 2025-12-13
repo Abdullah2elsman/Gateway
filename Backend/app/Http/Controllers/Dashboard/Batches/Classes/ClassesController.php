@@ -52,7 +52,7 @@ class ClassesController extends Controller
 
         return $this->class['move-to-hold']->moveToHold($trainees, $trainee_class, $class_id, $trainee_id);
     }
-    
+
     public function moveToRefund(?Classes $class, ?Trainee $trainees, ?TraineeClass $trainee_class, $class_id, $trainee_id)
     {
         $this->class['move-to-refund'] = new MoveToRefund($class, $class_id);
@@ -87,7 +87,7 @@ class ClassesController extends Controller
 
         return $this->class['bulk-move-to-hold']->moveToHold($class, $trainees, $trainee_class, $class_id, $request);
     }
-    
+
     public function bulkMoveToRefund(?Classes $class, ?Trainee $trainees, ?TraineeClass $trainee_class, $class_id, Request $request)
     {
         $this->class['bulk-move-to-refund'] = new BulkMoveToRefund($class, $class_id);
@@ -156,6 +156,27 @@ class ClassesController extends Controller
         $this->class['time_slot'] = new TimeSlot($class);
 
         return $this->class['time_slot']->add($time_slot, $request);
+    }
+
+    public function deleteGate($id, ?ClassMeta $gate = null, ?Classes $class = null)
+    {
+        $this->class['delete_gate'] = new \App\Batches\Classes\Delete\DeleteGate($class);
+
+        return $this->class['delete_gate']->delete($gate, $id);
+    }
+
+    public function deleteLevel($id, ?ClassMeta $level = null, ?Classes $class = null)
+    {
+        $this->class['delete_level'] = new \App\Batches\Classes\Delete\DeleteLevel($class);
+
+        return $this->class['delete_level']->delete($level, $id);
+    }
+
+    public function deleteTimeSlot($id, ?ClassMeta $time_slot = null, ?Classes $class = null)
+    {
+        $this->class['delete_time_slot'] = new \App\Batches\Classes\Delete\DeleteTimeSlot($class);
+
+        return $this->class['delete_time_slot']->delete($time_slot, $id);
     }
 
     public function viewClasses(?Classes $classes, $batch_id)

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Fetch Time Slots in Classes
@@ -39,6 +39,23 @@ export const createTimeSlotInClass = createAsyncThunk(
   }
 );
 
+// Delete Time Slot in Class
+
+export const deleteTimeSlotInClass = createAsyncThunk(
+  "timeSlotsClasses/deleteTimeSlotInClass",
+  async (timeSlotId, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/dashboard/batches/classes/time-slot/${timeSlotId}/delete`
+      );
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const TimeSlotsSlice = createSlice({
   name: "timeSlotsClasses",
   initialState: {
@@ -71,6 +88,19 @@ const TimeSlotsSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(createTimeSlotInClass.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    // delete a timeslot class
+    builder
+      .addCase(deleteTimeSlotInClass.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTimeSlotInClass.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteTimeSlotInClass.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

@@ -131,7 +131,7 @@ const Users = () => {
         branch: data.branch,
         phone_numbers: [data.phone.replace(/\s/g, "")],
         country: data.country,
-        is_activated: data.is_activated === "on" ? true : false,
+        is_activated: true,
         role: data.role,
       };
     }

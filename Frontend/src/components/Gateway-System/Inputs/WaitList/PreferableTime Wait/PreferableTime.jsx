@@ -29,27 +29,27 @@ const PreferableTime = ({
   );
 
   useEffect(() => {
-    if (age_group) {
-      // Fetch preferable times filtered by age_group only
-      dispatch(fetchPreferableTime(age_group));
+    if (attend_type) {
+      // Fetch preferable times filtered by attend_type using the correct endpoint
+      dispatch(fetchPreferableTime(attend_type));
     } else {
-      // If no age_group, fetch empty list to enforce separation
+      // If no attend_type, fetch empty list to enforce separation
       dispatch(fetchPreferableTime(null));
     }
-  }, [dispatch, age_group]);
+  }, [dispatch, attend_type]);
 
-  // create a new Preferable Time with age_group
+  // create a new Preferable Time with attend_type
   const createNewPreferableTime = (preferable_time) => {
-    if (!age_group) {
-      ToastError("Age group is required to add a preferable time");
+    if (!attend_type) {
+      ToastError("Attend type is required to add a preferable time");
       return;
     }
 
-    dispatch(createPreferableTime({ preferable_time, age_group }))
+    dispatch(createPreferableTime({ preferable_time, attend_type }))
       .unwrap()
       .then(({ message }) => {
         ToastSuccess(message);
-        dispatch(fetchPreferableTime(age_group));
+        dispatch(fetchPreferableTime(attend_type));
       })
       .catch((error) => {
         ToastError(error.message || error || "Failed to add preferable time");
@@ -63,7 +63,7 @@ const PreferableTime = ({
         .unwrap()
         .then(({ message }) => {
           ToastSuccess(message);
-          dispatch(fetchPreferableTime(age_group));
+          dispatch(fetchPreferableTime(attend_type));
         })
         .catch((error) => {
           ToastError(error.message || "Failed to delete preferable time");

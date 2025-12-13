@@ -35,9 +35,9 @@ class DeletePreferableTime
             // Start database transaction
             DB::beginTransaction();
 
-            // Find the preferable time by ID (check both adult and teen meta_keys)
+            // Find the preferable time by ID (check all attend type meta_keys)
             $gPreferableTime = GeneralMeta::where('id', $id)
-                ->whereIn('meta_key', ['preferable_times_adult', 'preferable_times_teen'])
+                ->whereIn('meta_key', ['time_slots_online', 'time_slots_offline', 'time_slots_hybrid', 'time_slots_private'])
                 ->first();
 
             if (!$gPreferableTime) {

@@ -20,9 +20,15 @@ use App\Http\Requests\Users\CreateUserRequest;
 
 class Create extends Permissions
 {
-    use GetRole, GetBranch, CreateMeta, UserDataHelper, StoreUserAddtionalData, 
-    StoreUserEssentialData, PermissionUniqueness, 
-    CheckPermissionByBranch, SendNotification;
+    use GetRole,
+        GetBranch,
+        CreateMeta,
+        UserDataHelper,
+        StoreUserAddtionalData,
+        StoreUserEssentialData,
+        PermissionUniqueness,
+        CheckPermissionByBranch,
+        SendNotification;
 
     public function __construct(?User $user, $current_user)
     {
@@ -39,18 +45,22 @@ class Create extends Permissions
 
     public function create(?User $user, ?UserMeta $UserMeta, CreateUserRequest $request)
     {
-        try 
-        {
-            $created_user = $this->StoreUserEssentialData($user, $request, 'assign_user', $this);
+        try {
+            $this->StoreUserEssentialData($user, $request, 'assign_user', $this);
 
-            $this->StoreUserAddtionalData($UserMeta, $created_user->id, $request, $this);
+            $this->StoreUserAddtionalData($request);
 
             $this->notifyUser('has created a new user', $this->current_user, 'create_users');
-
             return response(['message' => "Account created successfully."], 201);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
+            // Log the actual error for debugging
+            \Log::error('User creation failed: ' . $e->getMessage());
+
+            // In development, show the actual error
+            if (config('app.debug')) {
+                return response(['message' => "User creation failed: " . $e->getMessage()], 400);
+            }
+
             return response(['message' => "Something went wrong. The user cannot be registered. Please contact the administrator of the website."], 400);
         }
     }

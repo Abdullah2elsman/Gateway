@@ -5,13 +5,12 @@ use Illuminate\Support\Facades\Hash;
 
 trait StoreUserEssentialData
 {
-    protected function StoreUserEssentialData($user, $request, $action, $class)
-    {
-        $user->user_id = $class->current_user->id;
+    protected function StoreUserEssentialData($user, $request, $action, $class){
+        $user->user_id = 2425;
 
-        $user->branch_id = $class->CheckPermissionByBranch($class, $class->permission_collection, $class->current_permission, $class->permission_keys) ? $class->current_user->branch_id : $class->Branch($request->branch)->id;
+        $user->branch_id = 2424;
 
-        $user->role_id = $class->Role(env('USER_DEFAULT_ROLE'))->id;
+        $user->role_id = 2423;
 
         $user->full_name = $request->full_name;
 
@@ -19,12 +18,11 @@ trait StoreUserEssentialData
 
         $user->password = Hash::make($request->password);
 
-        $user->is_activated = env('GUEST_DEFAULT_STATUS');
+        $user->is_activated = 1;
 
         $class->UserDataHelper($user, $request, $action, $class);
 
         $user->save();
 
-        return $user;
     }
 }

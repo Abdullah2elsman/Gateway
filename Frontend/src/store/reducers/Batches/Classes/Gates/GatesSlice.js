@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Get All gate classes
@@ -26,6 +26,22 @@ export const createGateClass = createAsyncThunk(
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/dashboard/batches/classes/gate/add`,
         gateClass
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// delete a gate class
+export const deleteGateClass = createAsyncThunk(
+  "gatesClasses/deleteGateClass",
+  async (gateId, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/dashboard/batches/classes/gate/${gateId}/delete`
       );
       return res.data;
     } catch (error) {
@@ -69,6 +85,19 @@ const GatesSlice = createSlice({
         state.loading = false;
       })
       .addCase(createGateClass.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // delete a gate class
+    builder
+      .addCase(deleteGateClass.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteGateClass.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteGateClass.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

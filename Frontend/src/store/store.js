@@ -23,6 +23,7 @@ import levelClassesSlice from "./reducers/Batches/Classes/Levels/LevelsSlice";
 import GatesSlice from "./reducers/Batches/Classes/Gates/GatesSlice";
 import TimeSlotsSlice from "./reducers/Batches/Classes/TimeSlots/TimeSlots";
 import TraineesSlice from "./reducers/Trainees/TraineesSlice";
+import StatisticsSlice from "./reducers/Trainees/StatisticsSlice";
 import AttendanceSlice from "./reducers/Attendance/AttendanceSlice";
 import SessionNoteSlice from "./reducers/Attendance/Session Note/SessionNoteSlice";
 import AnnouncementsSlice from "./reducers/Announcements/AnnouncementsSlice";
@@ -45,6 +46,7 @@ const store = configureStore({
     pendingTestList: PendingTestListSlice,
     pendingTestAssign: PendingTestAssignSlice,
     Trainees: TraineesSlice,
+    Statistics: StatisticsSlice,
     waitList: WaitListSlice,
     viewWaitList: viewWaitListSlice,
     moveWaitList: MoveWaitListSlice,

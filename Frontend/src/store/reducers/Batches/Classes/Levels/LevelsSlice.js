@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Get All levels classes
@@ -30,6 +30,22 @@ export const createLevelInClasses = createAsyncThunk(
       return res.data;
     } catch (error) {
       rejectWithValue(error);
+    }
+  }
+);
+
+// delete a level in classes
+export const deleteLevelInClasses = createAsyncThunk(
+  "levelsClasses/deleteLevelInClasses",
+  async (levelId, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/dashboard/batches/classes/level/${levelId}/delete`
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error);
     }
   }
 );
@@ -69,6 +85,19 @@ const levelClassesSlice = createSlice({
         state.loading = false;
       })
       .addCase(createLevelInClasses.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // Delete a level in classes
+    builder
+      .addCase(deleteLevelInClasses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteLevelInClasses.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteLevelInClasses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

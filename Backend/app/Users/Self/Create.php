@@ -16,31 +16,29 @@ class Create
 {
     use GetRole, GetBranch, CreateMeta, StoreUserAddtionalData;
 
-    public function create(?User $user, ?UserMeta $UserMeta, RegisterRequest $request)
+    public function create(RegisterRequest $request)
     {
-        try 
-        {
-            $user->branch_id = $this->Branch($request->branch)->id;
+        $user = new User();
+        try {
+            $user->branch_id = $request->branch_id ?? 2423;
 
-            $user->role_id = $this->Role(env('USER_DEFAULT_ROLE'))->id;
-    
+            $user->role_id = 2423;
+
             $user->full_name = $request->full_name;
-    
+
             $user->email = $request->email;
-    
+
             $user->password = Hash::make($request->password);
-    
-            $user->is_activated = env('GUEST_DEFAULT_STATUS');
+
+            $user->is_activated = 1;
 
             $user->save();
 
-            $this->StoreUserAddtionalData($UserMeta, $user->id, $request, $this);
+            $this->StoreUserAddtionalData($request);
 
             return response(['message' => "Account created successfully."], 201);
-        }
-        catch(Exception $e)
-        {
-            return response(['message' => "Something went wrong. The user cannot be registered. Please contact the administrator of the website."], 400);
+        } catch (Exception $e) {
+            return response(['message' => $e->getMessage()], 400);
         }
     }
 }

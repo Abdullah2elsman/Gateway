@@ -1,11 +1,12 @@
-import { useEffect } from "react";
 import styles from "@styles/Home.module.css";
+import { useEffect } from "react";
 
-import Card from "@components/Gateway-System/Card/Card";
 import Announcements from "@components/Gateway-System/Announcements/Announcements";
-import { FaUsers } from "react-icons/fa";
-import { BiSolidTimer } from "react-icons/bi";
+import Card from "@components/Gateway-System/Card/Card";
 import Simple from "@components/Gateway-System/Table/Simple";
+import { TableCell, TableRow } from "@mui/material";
+import Batches from "@src/components/Gateway-System/Batches/Batches";
+import PathName from "@src/components/Gateway-System/PathName/PathName";
 import Title from "@src/components/Gateway-System/Title/Title";
 import {
   HoldListCloumns,
@@ -13,24 +14,23 @@ import {
   pendingUserCloumns,
   waitListCloumns,
 } from "@src/shared/SimpleTable";
-import { TbCreditCardRefund } from "react-icons/tb";
-import { GoBlocked } from "react-icons/go";
-import { GiSandsOfTime } from "react-icons/gi";
-import Batches from "@src/components/Gateway-System/Batches/Batches";
-import PathName from "@src/components/Gateway-System/PathName/PathName";
-import { useDispatch, useSelector } from "react-redux";
+import { fetchBlackList } from "@src/store/reducers/BlackList/BlackListSlice";
+import { fetchHoldlist } from "@src/store/reducers/HoldList/HoldListSlice";
 import { fetchPendingTestList } from "@src/store/reducers/PendingTestList/PendingTestSlice";
-import { fetchWaitList } from "@src/store/reducers/WaitList/WaitListSlice";
 import { fetchPendingUsers } from "@src/store/reducers/PendingUser/PendingUserSlice";
 import { fetchRefundList } from "@src/store/reducers/Refund/RefundSlice";
-import { TableCell, TableRow } from "@mui/material";
-import { fetchHoldlist } from "@src/store/reducers/HoldList/HoldListSlice";
-import { fetchBlackList } from "@src/store/reducers/BlackList/BlackListSlice";
+import { fetchDashboardStats } from "@src/store/reducers/Trainees/StatisticsSlice";
 import { fetchTrainees } from "@src/store/reducers/Trainees/TraineesSlice";
+import { fetchWaitList } from "@src/store/reducers/WaitList/WaitListSlice";
 import checkPermission from "@src/util/CheckPermission";
-import { useOutletContext } from "react-router-dom";
 import { Helmet } from "react-helmet";
-
+import { BiSolidTimer } from "react-icons/bi";
+import { FaUsers } from "react-icons/fa";
+import { GiSandsOfTime } from "react-icons/gi";
+import { GoBlocked } from "react-icons/go";
+import { TbCreditCardRefund } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { useOutletContext } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
 
@@ -43,8 +43,11 @@ const Home = () => {
   let { holdList } = useSelector((state) => state.holdList);
   let { blackList } = useSelector((state) => state.blackList);
   const { trainees } = useSelector((state) => state.Trainees);
+  const { traineeCount } = useSelector((state) => state.Statistics);
 
   useEffect(() => {
+    // Fetch trainee count for dashboard statistics
+    dispatch(fetchDashboardStats());
     checkPermission({
       name: "trainees",
       children: ["view_trainees", "view_trainees_by_branch"],
@@ -114,7 +117,7 @@ const Home = () => {
           }) && (
             <Card
               title_name="Trainees"
-              total={trainees?.length || 0}
+              total={traineeCount || 0}
               Icon={<FaUsers className={`${styles.icon} ${styles.icon}`} />}
               bg_color="icon"
             />

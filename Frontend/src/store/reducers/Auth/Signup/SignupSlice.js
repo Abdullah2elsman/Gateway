@@ -10,6 +10,7 @@ export const createSignUp = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/register`,
         user
       );
+      // console.log(res.data)
       return res.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

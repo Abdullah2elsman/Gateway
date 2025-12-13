@@ -23,4 +23,13 @@ class TraineesController extends Controller
 
         return $this->trainees['view-single']->viewSingleTraineeData($trainee, $request, $trainee_id);
     }
+
+    public function numberOfTrainees()
+    {
+        $count = Trainee::count();
+
+        return response([
+            'trainee_count' => $count
+        ], 200);
+    }
 }

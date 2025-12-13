@@ -1,11 +1,10 @@
-import { Helmet } from "react-helmet";
 import AdvancedTable from "@src/components/Gateway-System/Table/AdvancedTable";
-import PathName from "@src/components/Gateway-System/PathName/PathName";
-import styles from "@styles/Details.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { fetchBranchLogs, clearError } from "@src/store/reducers/LogsOperations/LogsSlice";
+import { clearError, fetchBranchLogs } from "@src/store/reducers/LogsOperations/LogsSlice";
 import { ToastError } from "@src/util/Toast";
+import styles from "@styles/Details.module.css";
+import { useEffect } from "react";
+import { Helmet } from "react-helmet";
+import { useDispatch, useSelector } from "react-redux";
 
 const BranchLogs = () => {
   const dispatch = useDispatch();
@@ -40,6 +39,12 @@ const BranchLogs = () => {
       accessorKey: "trainee_name",
       header: "Trainee Name",
       size: 150,
+    },
+    {
+      accessorKey: "trainee_mobile",
+      header: "Trainee Mobile",
+      size: 150,
+      Cell: ({ cell }) => cell.getValue() || "-",
     },
     {
       accessorKey: "from_branch",

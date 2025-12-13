@@ -17,8 +17,8 @@ class RegisterController extends Controller
         $this->register = new Create();
     }
 
-    public function register(?User $user, UserMeta $UserMeta, RegisterRequest $request)
+    public function register(RegisterRequest $request)
     {
-        return $this->register->create($user, $UserMeta, $request);
+        return $this->register->create($request);
     }
 }

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Gate;
 class AssignLevel
 {
     use GetList, SendNotification;
-    
+
     public function __construct(?Trainee $trainee, $trainee_id)
     {
         Gate::authorize('assignLevel', $trainee->find($trainee_id));
@@ -27,8 +27,18 @@ class AssignLevel
 
     public function assign(?Trainee $trainee, ?GeneralMeta $level, Request $request, $trainee_id)
     {
-        try
-        {
+        try {
+            // Handle level removal (when level is null)
+            if ($request->level === null) {
+                $trainee->where('id', $trainee_id)->update([
+                    'level' => null,
+                ]);
+
+                $this->notifyUser('has removed a level from a trainee on the pending list', $this->current_user, 'assign_level');
+
+                return response(['message' => 'Level removed successfully'], 200);
+            }
+
             $is_exists = $level->where('meta_key', $this->list_name)->where('id', $request->level)->exists();
 
             $is_trainer_set = $trainee->where('id', $trainee_id)->first()->trainer_id;
@@ -36,9 +46,8 @@ class AssignLevel
             !$is_exists && $message = 'Level is not exists in the pending list.';
 
             !$is_trainer_set && $message = 'Trainer not set for this trainee.';
-            
-            if (!$is_exists || !$is_trainer_set)
-            {
+
+            if (!$is_exists || !$is_trainer_set) {
                 return response(['message' => $message], 400);
             }
 
@@ -48,11 +57,9 @@ class AssignLevel
             ]);
 
             $this->notifyUser('has assigned a level to a trainee on the pending list', $this->current_user, 'assign_level');
-            
+
             return response(['message' => 'Level assigned successfully'], 200);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return response(['message' => "Something went wrong. Level cannot be assigned. Please contact the administrator of the website."], 400);
         }
     }

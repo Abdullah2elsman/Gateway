@@ -72,6 +72,9 @@ class TransitionsController extends Controller
                 'trainee:id,full_name,branch_id,trainer_id',
                 'trainee.branch:id,district',
                 'trainee.user:id,full_name',
+                'trainee.trainee_meta' => function ($query) {
+                    $query->where('meta_key', 'like', 'phone_number_%');
+                },
                 'fromBranch:id,district',
                 'toBranch:id,district',
                 'trainer:id,full_name',
@@ -100,10 +103,22 @@ class TransitionsController extends Controller
             }
 
             $transitions = $query->get()->map(function ($transition) {
+                // Get phone numbers from trainee meta
+                $phoneNumbers = [];
+                if ($transition->trainee && $transition->trainee->trainee_meta) {
+                    foreach ($transition->trainee->trainee_meta as $meta) {
+                        if (str_contains($meta->meta_key, 'phone_number')) {
+                            $phoneNumbers[$meta->meta_key] = $meta->meta_value;
+                        }
+                    }
+                }
+
                 return [
                     'id' => $transition->id,
                     'trainee_id' => $transition->trainee->id,
                     'trainee_name' => $transition->trainee->full_name,
+                    'trainee_mobile' => $phoneNumbers['phone_number_0'] ?? null,
+                    'trainee_phone_numbers' => $phoneNumbers,
                     'current_branch' => $transition->trainee->branch->district ?? null,
                     'current_trainer' => $transition->trainee->user->full_name ?? null,
                     'from_branch' => $transition->fromBranch->district ?? null,

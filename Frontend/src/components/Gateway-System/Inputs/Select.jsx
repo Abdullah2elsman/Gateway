@@ -1,10 +1,10 @@
 import {
-  Autocomplete,
-  Box,
-  FormControl,
-  FormLabel,
-  InputAdornment,
-  TextField,
+    Autocomplete,
+    Box,
+    FormControl,
+    FormLabel,
+    InputAdornment,
+    TextField,
 } from "@mui/material";
 import propTypes from "prop-types";
 import { useState } from "react";
@@ -28,6 +28,8 @@ const Select = ({
   loading,
   AllowClear,
   showRemoveButton,
+  onRemove,
+  removeLoading,
 }) => {
   const [add, setAdd] = useState(false);
   const [remove, setRemove] = useState(false);
@@ -91,9 +93,18 @@ const Select = ({
               cursor: "pointer",
               marginLeft: 8,
             }}
-            onClick={() => setRemove(!remove)}
+            onClick={() => {
+              if (onRemove) {
+                // If onRemove is provided, use it for assignment removal
+                onRemove();
+              } else {
+                // Otherwise, use the original remove functionality
+                setRemove(!remove);
+              }
+            }}
+            disabled={removeLoading}
           >
-            {!remove ? "Remove" : "Cancel"}
+            {removeLoading ? <Spinner /> : (!remove ? "Remove" : "Cancel")}
           </button>
         )}
         {AllowClear && !add && (
@@ -237,6 +248,8 @@ Select.propTypes = {
   loading: propTypes.bool,
   AllowClear: propTypes.bool,
   showRemoveButton: propTypes.bool,
+  onRemove: propTypes.func,
+  removeLoading: propTypes.bool,
 };
 
 export default Select;

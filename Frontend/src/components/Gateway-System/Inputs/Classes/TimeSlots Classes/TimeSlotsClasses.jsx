@@ -1,13 +1,14 @@
-import { useEffect } from "react";
-import PropTypes from "prop-types";
-import Select from "../../Select";
-import { useDispatch, useSelector } from "react-redux";
-import { ToastError, ToastSuccess } from "@src/util/Toast";
 import {
-  clearError,
-  createTimeSlotInClass,
-  fetchTimeSlotsInClass,
+    clearError,
+    createTimeSlotInClass,
+    deleteTimeSlotInClass,
+    fetchTimeSlotsInClass
 } from "@src/store/reducers/Batches/Classes/TimeSlots/TimeSlots";
+import { ToastError, ToastSuccess } from "@src/util/Toast";
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Select from "../../Select";
 
 const TimeSlotsClasses = ({
   label,
@@ -35,6 +36,38 @@ const TimeSlotsClasses = ({
       });
   };
 
+  // delete a time slot from the system
+  const deleteTimeSlotHandler = (timeSlotId) => {
+    console.log("Delete time slot called with ID:", timeSlotId, "Type:", typeof timeSlotId);
+    
+    if (!timeSlotId) {
+      console.error("No time slot ID provided");
+      ToastError("No time slot ID provided");
+      return;
+    }
+    
+    const confirmed = window.confirm("Are you sure you want to delete this time slot? This will remove it from the system permanently.");
+    console.log("User confirmation:", confirmed);
+    
+    if (confirmed) {
+      console.log("User confirmed deletion, dispatching action...");
+      dispatch(deleteTimeSlotInClass(timeSlotId))
+        .unwrap()
+        .then((response) => {
+          console.log("Delete successful:", response);
+          ToastSuccess(response.message || "Time slot deleted successfully");
+          dispatch(fetchTimeSlotsInClass(attend_type));
+        })
+        .catch((error) => {
+          console.error("Delete failed:", error);
+          console.error("Error details:", error.response?.data || error);
+          ToastError(error.message || error || "Failed to delete time slot");
+        });
+    } else {
+      console.log("User canceled deletion");
+    }
+  };
+
   useEffect(() => {
     if (error) {
       ToastError(error.message);
@@ -56,6 +89,7 @@ const TimeSlotsClasses = ({
       placeholder="Time Slot"
       Button={Button}
       onSubmitNew={AddNewTimeSlottoClasses}
+      onDelete={deleteTimeSlotHandler}
       onChange={(e) => setStateId(Number(e.target.dataset.value))}
       loading={isLoading}
       defaultValue={defaultValue}

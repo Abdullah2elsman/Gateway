@@ -26,6 +26,7 @@ use App\Http\Controllers\Dashboard\Batches\Classes\ClassController;
 use App\Http\Controllers\Dashboard\Batches\Classes\ClassesController;
 use App\Http\Controllers\Dashboard\Attendance\AttendanceController;
 use App\Http\Controllers\Dashboard\GeneralMetaController;
+use App\Models\Trainee;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +124,7 @@ Route::prefix('v1')->group(function () {
         // --------------------------------------------------------------------
         Route::prefix('dashboard/trainees')->group(function () {
             Route::get('/', [TraineesController::class, 'view']);
+            Route::get('/count', [TraineesController::class, 'numberOfTrainees']);
             Route::get('/{trainee_id}', [TraineesController::class, 'viewSingleTrainee']);
             Route::get('/{trainee_id}/transitions', [\App\Http\Controllers\Dashboard\Trainees\TransitionsController::class, 'viewTraineeTransitions']);
         });
@@ -307,6 +309,11 @@ Route::prefix('v1')->group(function () {
             Route::post('/gate/add', [ClassesController::class, 'createGate']);
             Route::post('/level/add', [ClassesController::class, 'createLevel']);
             Route::post('/time-slot/add', [ClassesController::class, 'createTimeSlot']);
+
+            // Delete Resources
+            Route::delete('/gate/{id}/delete', [ClassesController::class, 'deleteGate']);
+            Route::delete('/level/{id}/delete', [ClassesController::class, 'deleteLevel']);
+            Route::delete('/time-slot/{id}/delete', [ClassesController::class, 'deleteTimeSlot']);
         });
 
 
@@ -344,7 +351,7 @@ Route::prefix('v1')->group(function () {
         // METADATA MANAGEMENT
         // --------------------------------------------------------------------
         Route::patch('dashboard/meta/paid-value/update', [GeneralMetaController::class, 'updatePaidValue']);
- 
+
         Route::patch('dashboard/meta/trainee-level/update', [GeneralMetaController::class, 'updateTraineeLevel']);
 
         // --------------------------------------------------------------------

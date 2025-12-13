@@ -85,6 +85,24 @@ export const deletePaymentType = createAsyncThunk(
   }
 );
 
+// delete level
+export const deletePendingTestLevel = createAsyncThunk(
+  "pendingTest/deletePendingTestLevel",
+  async (levelId, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/dashboard/pendinglist/level/${levelId}/delete`
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response.data.message || error.response.data
+      );
+    }
+  }
+);
+
 // create a new pending test
 export const createPendingTest = createAsyncThunk(
   "pendingTest/createPendingTest",
@@ -227,6 +245,19 @@ const PendingTestSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(deletePaymentType.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
+
+    // delete level
+    builder
+      .addCase(deletePendingTestLevel.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deletePendingTestLevel.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deletePendingTestLevel.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

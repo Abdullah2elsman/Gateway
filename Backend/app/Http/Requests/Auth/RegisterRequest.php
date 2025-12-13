@@ -15,7 +15,6 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'branch' => ['required', 'string', 'exists:gt_branches,district'],
             'full_name' => ['required', 'string', 'max:40'],
             'email' => ['required', 'email', 'unique:gt_users,email'],
             'phone_numbers.*' => ['required', 'regex:/[0-9]{10}/', 'numeric', 'unique:gt_usermeta,meta_value'],
