@@ -30,10 +30,10 @@ class Create
 
             $user->password = Hash::make($request->password);
 
-            $user->is_activated = 1;
-
+            $user->is_activated = 0;
+            
             $user->save();
-
+            
             $this->StoreUserAddtionalData($request);
 
             return response(['message' => "Account created successfully."], 201);
