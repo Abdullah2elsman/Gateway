@@ -153,17 +153,23 @@ const Profile = () => {
           <div className={styles.profileTilte}>
             <img
               src={(() => {
-                const imageUrl = img_profile?.URL || // Show preview of selected image
-                  (profile?.user?.user_image 
-                    ? `${import.meta.env.VITE_API_URL_image}${profile.user.user_image}/${token}`
-                    : profile_Img); // Fallback to default avatar
+                if (img_profile?.URL) {
+                  return img_profile.URL; // Show preview of selected image
+                }
                 
-                console.log("Image URL:", imageUrl);
-                console.log("Profile user image:", profile?.user?.user_image);
-                console.log("Token:", token);
-                console.log("API URL Image:", import.meta.env.VITE_API_URL_image);
+                if (profile?.user?.user_image) {
+                  const imagePath = profile.user.user_image;
+                  // Construct public storage URL
+                  const imageUrl = `${import.meta.env.VITE_API_URL_image}/storage/user/${imagePath}`;
+                  
+                  console.log("Image URL:", imageUrl);
+                  console.log("Profile user image:", profile.user.user_image);
+                  console.log("API URL Image:", import.meta.env.VITE_API_URL_image);
+                  
+                  return imageUrl;
+                }
                 
-                return imageUrl;
+                return profile_Img; // Fallback to default avatar
               })()}
               loading="lazy"
               alt="profile"

@@ -1,20 +1,20 @@
+import propTypes from "prop-types";
 import { useState } from "react";
 import styles from "./HeaderMobile.module.css";
-import propTypes from "prop-types";
 
 import Avatar from "@assets/image/Avatar.png";
+import CustomizedMenus from "@components/Gateway-System/CustomizedMenus/CustomizedMenus";
+import Inbox from "@components/Gateway-System/Inbox/Inbox";
+import Notification from "@components/Gateway-System/Notification/Notification";
 import { Button, Divider, IconButton, MenuItem } from "@mui/material";
+import Search from "@src/components/Gateway-System/Search/Search";
+import checkPermission from "@src/util/CheckPermission";
+import { CgProfile } from "react-icons/cg";
+import { CiSearch } from "react-icons/ci";
+import { FaMessage } from "react-icons/fa6";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { IoNotifications } from "react-icons/io5";
-import { FaMessage } from "react-icons/fa6";
-import { CiSearch } from "react-icons/ci";
 import { MdOutlineLogout } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
-import CustomizedMenus from "@components/Gateway-System/CustomizedMenus/CustomizedMenus";
-import Notification from "@components/Gateway-System/Notification/Notification";
-import Inbox from "@components/Gateway-System/Inbox/Inbox";
-import checkPermission from "@src/util/CheckPermission";
-import Search from "@src/components/Gateway-System/Search/Search";
 
 const HeaderMobile = ({
   handleClick,
@@ -22,7 +22,6 @@ const HeaderMobile = ({
   handleOpenMenu,
   profile,
   imgProfile,
-  token,
   Count_inbox,
   Count_notification,
   handleClearCountInbox,
@@ -124,9 +123,7 @@ const HeaderMobile = ({
             >
               {imgProfile ? (
                 <img
-                  src={`${import.meta.env.VITE_API_URL_image}${
-                    imgProfile || ""
-                  }/${token}`}
+                  src={`${import.meta.env.VITE_API_URL_image}/storage/user/${imgProfile}`}
                   alt="Avatar Img_1"
                 />
               ) : (
@@ -171,7 +168,6 @@ HeaderMobile.propTypes = {
   handleClose: propTypes.func.isRequired,
   handleOpenMenu: propTypes.func.isRequired,
   imgProfile: propTypes.string,
-  token: propTypes.string,
   Count_inbox: propTypes.number,
   Count_notification: propTypes.number,
   handleClearCountInbox: propTypes.func,

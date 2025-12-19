@@ -27,6 +27,7 @@ use App\Http\Controllers\Dashboard\Batches\Classes\ClassesController;
 use App\Http\Controllers\Dashboard\Attendance\AttendanceController;
 use App\Http\Controllers\Dashboard\GeneralMetaController;
 use App\Models\Trainee;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,11 +40,12 @@ use App\Models\Trainee;
 // ============================================================================
 
 Route::prefix('v1')->group(function () {
-
+    Route::get('/link', function () {
+        Artisan::call('storage:link');
+    });
     // ========================================================================
     // PUBLIC ROUTES (No Authentication Required)
     // ========================================================================
-
 
     // Authentication Routes
     Route::post('/register', [RegisterController::class, 'register']);
@@ -358,6 +360,115 @@ Route::prefix('v1')->group(function () {
         // SEARCH
         // --------------------------------------------------------------------
         Route::get('/dashboard/search', [GeneralController::class, 'search']);
+
+        // --------------------------------------------------------------------
+        // PROFILE IMAGE APIs
+        // --------------------------------------------------------------------
+
+        // Get user profile image info (JSON response)
+        Route::get('/user/profile-image/{user_id?}', function ($user_id = null) {
+            try {
+                // Get current user or specific user
+                $user = $user_id ? \App\Models\User::find($user_id) : auth()->user();
+
+                if (!$user) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'User not found'
+                    ], 404);
+                }
+
+                // Get user image from meta table
+                $userImage = \App\Models\UserMeta::where('user_id', $user->id)
+                    ->where('meta_key', 'user_image')
+                    ->first();
+
+                if (!$userImage || !$userImage->meta_value) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No profile image found',
+                        'user_id' => $user->id,
+                        'user_name' => $user->full_name
+                    ], 404);
+                }
+
+                // Build image URLs for public storage
+                $filename = $userImage->meta_value;
+                $publicUrl = env('APP_URL') . '/storage/user/' . $filename;
+
+                // Check if file exists in public storage
+                $publicPath = 'public/user/' . $filename;
+                $fullPath = storage_path('app/' . $publicPath);
+                $fileExists = file_exists($fullPath);
+
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'user_id' => $user->id,
+                        'user_name' => $user->full_name,
+                        'image_filename' => $filename,
+                        'public_url' => $publicUrl,
+                        'storage_path' => $publicPath,
+                        'file_exists' => $fileExists,
+                        'file_size' => $fileExists ? filesize($fullPath) : null,
+                        'storage_type' => 'public',
+                        'accessible_via' => 'Direct URL (no Laravel route needed)'
+                    ]
+                ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error retrieving profile image',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        });
+
+        // Get user profile image file directly (returns actual image)
+        Route::get('/user/profile-image-file/{user_id?}', function ($user_id = null) {
+            try {
+                // Get current user or specific user
+                $user = $user_id ? \App\Models\User::find($user_id) : auth()->user();
+
+                if (!$user) {
+                    return response()->json(['error' => 'User not found'], 404);
+                }
+
+                // Get user image from meta table
+                $userImage = \App\Models\UserMeta::where('user_id', $user->id)
+                    ->where('meta_key', 'user_image')
+                    ->first();
+
+                if (!$userImage || !$userImage->meta_value) {
+                    return response()->json(['error' => 'No profile image found'], 404);
+                }
+
+                // Get file path from public storage
+                $filename = $userImage->meta_value;
+                $publicPath = 'public/user/' . $filename;
+                $fullPath = storage_path('app/' . $publicPath);
+
+                if (!file_exists($fullPath)) {
+                    return response()->json([
+                        'error' => 'Image file not found on server',
+                        'expected_path' => $fullPath,
+                        'public_url' => env('APP_URL') . '/storage/user/' . $filename
+                    ], 404);
+                }
+
+                // Return the actual image file
+                $mimeType = mime_content_type($fullPath);
+                return response()->file($fullPath, [
+                    'Content-Type' => $mimeType,
+                    'Cache-Control' => 'public, max-age=31536000',
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'error' => 'Error serving profile image',
+                    'message' => $e->getMessage()
+                ], 500);
+            }
+        });
 
         // --------------------------------------------------------------------
         // AUTHENTICATION & BROADCASTING

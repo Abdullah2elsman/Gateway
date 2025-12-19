@@ -1,32 +1,32 @@
+import propTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styles from "./Header.module.css";
-import propTypes from "prop-types";
 
+import sound from "@assets/Sound/notification-sound.mp3";
 import Avatar from "@assets/image/Avatar.png";
-import { Button, Divider, IconButton, MenuItem } from "@mui/material";
-import { HiOutlineMenuAlt1 } from "react-icons/hi";
-import { IoNotifications } from "react-icons/io5";
-import { FaMessage } from "react-icons/fa6";
-import { CiSearch } from "react-icons/ci";
-import { MdOutlineLogout } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
 import CustomizedMenus from "@components/Gateway-System/CustomizedMenus/CustomizedMenus";
-import HeaderMobile from "../HeaderMobile/HeaderMobile";
-import Notification from "@src/components/Gateway-System/Notification/Notification";
+import { Button, Divider, IconButton, MenuItem } from "@mui/material";
 import Inbox from "@src/components/Gateway-System/Inbox/Inbox";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import Notification from "@src/components/Gateway-System/Notification/Notification";
+import Search from "@src/components/Gateway-System/Search/Search";
+import { fetchReplies } from "@src/store/reducers/Announcements/AnnouncementsSlice";
 import { createLogOut } from "@src/store/reducers/Auth/Login/LoginSlice";
-import checkPermission, { checkNotifications } from "@src/util/CheckPermission";
-import { UserData } from "@src/util/UserData";
 import { getUserSelf } from "@src/store/reducers/Auth/Profile/ProfileSlice";
+import { fetchNotifications } from "@src/store/reducers/Notification/NotificationSlice";
+import checkPermission, { checkNotifications } from "@src/util/CheckPermission";
+import { ToastSuccess } from "@src/util/Toast";
+import { UserData } from "@src/util/UserData";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
-import sound from "@assets/Sound/notification-sound.mp3";
-import { ToastSuccess } from "@src/util/Toast";
-import { fetchReplies } from "@src/store/reducers/Announcements/AnnouncementsSlice";
-import { fetchNotifications } from "@src/store/reducers/Notification/NotificationSlice";
-import Search from "@src/components/Gateway-System/Search/Search";
+import { CgProfile } from "react-icons/cg";
+import { CiSearch } from "react-icons/ci";
+import { FaMessage } from "react-icons/fa6";
+import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { IoNotifications } from "react-icons/io5";
+import { MdOutlineLogout } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import HeaderMobile from "../HeaderMobile/HeaderMobile";
 
 const Header = ({ handleOpenMenu }) => {
   const [profiles, setProfiles] = useState(null);
@@ -213,7 +213,6 @@ const Header = ({ handleOpenMenu }) => {
         handleOpenMenu={handleOpenMenu}
         profile={profiles}
         imgProfile={profile?.user?.user_image}
-        token={token}
         Count_inbox={replies?.number_of_messages}
         Count_notification={notifications?.number_of_notifications}
         handleClearCountInbox={handleClearCountInbox}
@@ -311,9 +310,7 @@ const Header = ({ handleOpenMenu }) => {
               >
                 {profile?.user?.user_image ? (
                   <img
-                    src={`${import.meta.env.VITE_API_URL_image}${
-                      profile?.user?.user_image || ""
-                    }/${token}`}
+                    src={`${import.meta.env.VITE_API_URL_image}/storage/user/${profile.user.user_image}`}
                     alt="Avatar Img_1"
                     loading="lazy"
                   />

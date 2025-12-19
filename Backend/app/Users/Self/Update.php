@@ -20,6 +20,7 @@ use App\Users\Helpers\UserDataHelper;
 use App\Traits\CheckPermissionByBranch;
 use App\Users\Helpers\UpdateUserEssentialData;
 use App\Users\Helpers\UpdateUserAdditionalData;
+use Illuminate\Support\Facades\Log;
 
 
 class Update extends Permissions
@@ -45,17 +46,39 @@ class Update extends Permissions
 
     public function update(?UserMeta $UserMeta, Request $request)
     {
-        // try 
-        // {
+        try {
+            Log::info('Profile Update Started', [
+                'user_id' => $this->current_user->id,
+                'has_image' => $request->hasFile('image'),
+                'image_info' => $request->hasFile('image') ? [
+                    'name' => $request->file('image')->getClientOriginalName(),
+                    'size' => $request->file('image')->getSize(),
+                    'mime' => $request->file('image')->getMimeType(),
+                    'temp_path' => $request->file('image')->getPathname()
+                ] : null,
+                'all_files' => $request->allFiles(),
+                'request_data' => $request->except(['password', 'confirm_password'])
+            ]);
+
             $this->UpdateUserEssentialData($this->current_user, $request, $this);
 
             $this->UpdateUserAdditionalData($UserMeta, $this->current_user->id, $request, $this);
 
+            Log::info('Profile Update Completed Successfully', [
+                'user_id' => $this->current_user->id
+            ]);
+
             return response(['message' => "Account updated successfully."], 201);
-        // }
-        // catch(Exception $e)
-        // {
-        //     return response(['message' => "Something went wrong. The user cannot be updated. Please contact the administrator of the website."], 400);
-        // }
+        } catch (Exception $e) {
+            Log::error('Profile Update Failed', [
+                'user_id' => $this->current_user->id ?? 'unknown',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return response(['message' => "Something went wrong. The user cannot be updated. Please contact the administrator of the website."], 400);
+        }
     }
 }

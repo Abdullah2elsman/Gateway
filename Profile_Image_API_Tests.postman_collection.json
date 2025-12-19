@@ -1,0 +1,224 @@
+{
+  "info": {
+    "name": "Profile Image API Tests",
+    "description": "Collection for testing profile image upload and retrieval",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_url",
+      "value": "{{base_url}}/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "your-auth-token-here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('token', jsonData.token);",
+              "    console.log('Token saved:', jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"your-email@example.com\",\n  \"password\": \"your-password\"\n}"
+        },
+        "url": {
+          "raw": "{{api_url}}/auth",
+          "host": ["{{api_url}}"],
+          "path": ["auth"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get Current User Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/dashboard/user",
+          "host": ["{{api_url}}"],
+          "path": ["dashboard", "user"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Upload Profile Image",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "image",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "full_name",
+              "value": "Test User",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{api_url}}/dashboard/user/update",
+          "host": ["{{api_url}}"],
+          "path": ["dashboard", "user", "update"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Get Profile Image Info (Current User)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user/profile-image",
+          "host": ["{{api_url}}"],
+          "path": ["user", "profile-image"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Get Profile Image Info (Specific User)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user/profile-image/123",
+          "host": ["{{api_url}}"],
+          "path": ["user", "profile-image", "123"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Get Profile Image File (Current User)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user/profile-image-file",
+          "host": ["{{api_url}}"],
+          "path": ["user", "profile-image-file"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. Get Profile Image File (Specific User)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{api_url}}/user/profile-image-file/123",
+          "host": ["{{api_url}}"],
+          "path": ["user", "profile-image-file", "123"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8. Public Image Access (No Auth)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/user/1234567890_123456_image.jpg",
+          "host": ["{{base_url}}"],
+          "path": ["user", "1234567890_123456_image.jpg"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9. Debug Image Info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/debug-image/1234567890_123456_image.jpg",
+          "host": ["{{base_url}}"],
+          "path": ["debug-image", "1234567890_123456_image.jpg"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
