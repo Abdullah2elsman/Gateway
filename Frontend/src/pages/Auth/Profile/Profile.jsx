@@ -158,6 +158,7 @@ const Profile = () => {
                 }
                 
                 if (profile?.user?.user_image) {
+<<<<<<< HEAD
                   // CRITICAL FIX: Clean the malformed filename
                   let cleanFilename = profile.user.user_image;
                   
@@ -186,6 +187,15 @@ const Profile = () => {
                   console.log("Clean filename:", cleanFilename);
                   console.log("Final Image URL:", imageUrl);
                   console.log("Base URL:", baseUrl);
+=======
+                  const imagePath = profile.user.user_image;
+                  // Construct public storage URL
+                  const imageUrl = `${import.meta.env.VITE_API_URL_image}/storage/user/${imagePath}`;
+                  
+                  console.log("Image URL:", imageUrl);
+                  console.log("Profile user image:", profile.user.user_image);
+                  console.log("API URL Image:", import.meta.env.VITE_API_URL_image);
+>>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
                   
                   return imageUrl;
                 }

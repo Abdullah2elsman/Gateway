@@ -310,6 +310,7 @@ const Header = ({ handleOpenMenu }) => {
               >
                 {profile?.user?.user_image ? (
                   <img
+<<<<<<< HEAD
                     src={(() => {
                       // CRITICAL FIX: Clean the malformed filename
                       let cleanFilename = profile.user.user_image;
@@ -335,6 +336,9 @@ const Header = ({ handleOpenMenu }) => {
                       // Construct the correct URL
                       return `${baseUrl}/storage/user/${cleanFilename}`;
                     })()}
+=======
+                    src={`${import.meta.env.VITE_API_URL_image}/storage/user/${profile.user.user_image}`}
+>>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
                     alt="Avatar Img_1"
                     loading="lazy"
                     onError={(e) => {

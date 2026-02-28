@@ -123,6 +123,7 @@ const HeaderMobile = ({
             >
               {imgProfile ? (
                 <img
+<<<<<<< HEAD
                   src={(() => {
                     // CRITICAL FIX: Clean the malformed filename
                     let cleanFilename = imgProfile;
@@ -148,6 +149,9 @@ const HeaderMobile = ({
                     // Construct the correct URL
                     return `${baseUrl}/storage/user/${cleanFilename}`;
                   })()}
+=======
+                  src={`${import.meta.env.VITE_API_URL_image}/storage/user/${imgProfile}`}
+>>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
                   alt="Avatar Img_1"
                   onError={(e) => {
                     console.error("Mobile header image failed to load:", e.target.src);
