@@ -23,7 +23,13 @@ trait GetSingleUserMetaData
 
             foreach($class->current_user->user_meta as $meta)
             {
-                $meta_collection[$meta->meta_key] = $meta->meta_value;
+                // Special handling for user_image to return full URL
+                if ($meta->meta_key === 'user_image' && $meta->meta_value) {
+                    $meta_collection[$meta->meta_key] = $meta->meta_value;
+                    $meta_collection['user_image_url'] = env('APP_URL') . '/storage/user/' . $meta->meta_value;
+                } else {
+                    $meta_collection[$meta->meta_key] = $meta->meta_value;
+                }
             }
 
             $class->isAllowed($class->current_user, 'view_self_role', $class->permission_collection, $class->current_user?->id) && $roles_collection = ['role' => $class->current_user->role->role];

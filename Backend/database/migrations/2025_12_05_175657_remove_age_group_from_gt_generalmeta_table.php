@@ -9,12 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('gt_generalmeta', function (Blueprint $table) {
-            $table->dropColumn('age_group');
-        });
+        if (Schema::hasColumn('gt_generalmeta', 'age_group')) {
+            Schema::table('gt_generalmeta', function (Blueprint $table) {
+                $table->dropColumn('age_group');
+            });
+        }
     }
+
 
     /**
      * Reverse the migrations.

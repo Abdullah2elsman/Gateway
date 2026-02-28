@@ -17,7 +17,7 @@ class UserController extends Controller
         $this->current_user = auth()->user();
     }
 
-    public function view(?User $user)
+    public function view()
     {
         $this->user['view'] = new View($this->current_user);
 
@@ -31,7 +31,7 @@ class UserController extends Controller
         return $this->user['update']->update($UserMeta, $request);
     }
 
-    public function delete(?User $user)
+    public function delete()
     {
         $this->user['delete'] = new Delete($this->current_user);
 

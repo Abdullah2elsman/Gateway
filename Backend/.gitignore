@@ -15,3 +15,5 @@ yarn-error.log
 /.phpunit.cache
 .php-cs-fixer.cache
 /public/build
+*.txt
+*.md

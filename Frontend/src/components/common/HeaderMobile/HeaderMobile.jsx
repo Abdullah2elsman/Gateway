@@ -1,20 +1,20 @@
+import propTypes from "prop-types";
 import { useState } from "react";
 import styles from "./HeaderMobile.module.css";
-import propTypes from "prop-types";
 
 import Avatar from "@assets/image/Avatar.png";
+import CustomizedMenus from "@components/Gateway-System/CustomizedMenus/CustomizedMenus";
+import Inbox from "@components/Gateway-System/Inbox/Inbox";
+import Notification from "@components/Gateway-System/Notification/Notification";
 import { Button, Divider, IconButton, MenuItem } from "@mui/material";
+import Search from "@src/components/Gateway-System/Search/Search";
+import checkPermission from "@src/util/CheckPermission";
+import { CgProfile } from "react-icons/cg";
+import { CiSearch } from "react-icons/ci";
+import { FaMessage } from "react-icons/fa6";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { IoNotifications } from "react-icons/io5";
-import { FaMessage } from "react-icons/fa6";
-import { CiSearch } from "react-icons/ci";
 import { MdOutlineLogout } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
-import CustomizedMenus from "@components/Gateway-System/CustomizedMenus/CustomizedMenus";
-import Notification from "@components/Gateway-System/Notification/Notification";
-import Inbox from "@components/Gateway-System/Inbox/Inbox";
-import checkPermission from "@src/util/CheckPermission";
-import Search from "@src/components/Gateway-System/Search/Search";
 
 const HeaderMobile = ({
   handleClick,
@@ -22,7 +22,6 @@ const HeaderMobile = ({
   handleOpenMenu,
   profile,
   imgProfile,
-  token,
   Count_inbox,
   Count_notification,
   handleClearCountInbox,
@@ -124,10 +123,36 @@ const HeaderMobile = ({
             >
               {imgProfile ? (
                 <img
-                  src={`${import.meta.env.VITE_API_URL_image}${
-                    imgProfile || ""
-                  }/${token}`}
+                  src={(() => {
+                    // CRITICAL FIX: Clean the malformed filename
+                    let cleanFilename = imgProfile;
+                    
+                    // Remove token parts (anything after |)
+                    if (cleanFilename.includes('|')) {
+                      cleanFilename = cleanFilename.split('|')[0];
+                    }
+                    
+                    // Remove path parts - get just the filename
+                    if (cleanFilename.includes('/')) {
+                      cleanFilename = cleanFilename.split('/').pop();
+                    }
+                    
+                    // Remove query parameters
+                    if (cleanFilename.includes('?')) {
+                      cleanFilename = cleanFilename.split('?')[0];
+                    }
+                    
+                    // Ensure base URL is clean
+                    const baseUrl = import.meta.env.VITE_API_URL_image.replace(/\/$/, '');
+                    
+                    // Construct the correct URL
+                    return `${baseUrl}/storage/user/${cleanFilename}`;
+                  })()}
                   alt="Avatar Img_1"
+                  onError={(e) => {
+                    console.error("Mobile header image failed to load:", e.target.src);
+                    e.target.src = Avatar; // Fallback to default on error
+                  }}
                 />
               ) : (
                 <img src={Avatar} alt="Avatar Img_2" />
@@ -171,7 +196,6 @@ HeaderMobile.propTypes = {
   handleClose: propTypes.func.isRequired,
   handleOpenMenu: propTypes.func.isRequired,
   imgProfile: propTypes.string,
-  token: propTypes.string,
   Count_inbox: propTypes.number,
   Count_notification: propTypes.number,
   handleClearCountInbox: propTypes.func,

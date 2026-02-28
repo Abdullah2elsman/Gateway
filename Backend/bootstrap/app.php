@@ -27,9 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            $request->headers->set('Accept', 'application/json');
-
-            return parent::render($request, $e);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Route not found.',
+                    'error' => 'The requested route does not exist.'
+                ], 404);
+            }
+            
+            return response()->view('errors.404', [], 404);
         });
     })
     ->create();

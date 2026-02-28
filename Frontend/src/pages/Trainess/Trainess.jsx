@@ -2,7 +2,10 @@ import PathName from "@components/Gateway-System/PathName/PathName";
 import ActionTrainess from "@src/components/Gateway-System/Table/Actions/ActionTrainess";
 import AdvancedTable from "@src/components/Gateway-System/Table/AdvancedTable";
 import { CloumnsTrainess } from "@src/shared/CloumnsTables";
-import { clearError, fetchTrainees } from "@src/store/reducers/Trainees/TraineesSlice";
+import {
+  clearError,
+  fetchTrainees,
+} from "@src/store/reducers/Trainees/TraineesSlice";
 import checkPermission from "@src/util/CheckPermission";
 import { ToastError } from "@src/util/Toast";
 import styles from "@styles/styles.module.css";
@@ -16,9 +19,21 @@ const Trainess = () => {
   const [page, setPage] = useState(1); // For pagination support
   const [perPage, setPerPage] = useState(50); // Rows per page
 
+  // ✅ NEW: key لإجبار الجدول يعمل remount (يمسح selection بعد أي action)
+  const [tableKey, setTableKey] = useState(0);
+
   const context = useOutletContext();
   const dispatch = useDispatch();
-  const { trainees, pagination, error, isLoading } = useSelector((state) => state.Trainees);
+
+  const { trainees, pagination, error, isLoading } = useSelector(
+    (state) => state.Trainees
+  );
+
+  // ✅ NEW: Refresh موحد (يريفرش الداتا + يمسح selection عن طريق remount)
+  const refreshTrainees = useCallback(() => {
+    dispatch(fetchTrainees({ branch, page, per_page: perPage }));
+    setTableKey((k) => k + 1); // ده اللي بيمسح الـ selection
+  }, [dispatch, branch, page, perPage]);
 
   // Fetch trainees when branch, page, or perPage changes
   useEffect(() => {
@@ -28,7 +43,8 @@ const Trainess = () => {
   // Show error message
   useEffect(() => {
     if (error) {
-      const errorMessage = error?.message || error?.error || "Failed to load trainees";
+      const errorMessage =
+        error?.message || error?.error || "Failed to load trainees";
       ToastError(errorMessage);
 
       setTimeout(() => {
@@ -38,11 +54,14 @@ const Trainess = () => {
   }, [error, dispatch]);
 
   // Handle page change directly
-  const handlePageChange = useCallback((newPage) => {
-    if (newPage >= 1 && newPage <= pagination?.last_page) {
-      setPage(newPage);
-    }
-  }, [pagination]);
+  const handlePageChange = useCallback(
+    (newPage) => {
+      if (newPage >= 1 && newPage <= pagination?.last_page) {
+        setPage(newPage);
+      }
+    },
+    [pagination]
+  );
 
   // Handle rows per page change
   const handlePerPageChange = useCallback((newPerPage) => {
@@ -69,21 +88,28 @@ const Trainess = () => {
 
       <PathName path="Trainess" />
       <div className={styles.containerPage_content}>
-        {/* Table Pending Users */}
         <div className={styles.table} style={{ marginTop: "80px" }}>
           <AdvancedTable
+            key={tableKey} // ✅ NEW: remount بعد أي refresh/action (يمسح selection)
             columns={CloumnsTrainess()}
             type="trainees"
             rows={trainees || []}
-            Actions={<ActionTrainess />}
+            Actions={
+              <ActionTrainess
+                // ✅ NEW: لو ActionTrainess بيدعمها هيناديها بعد النجاح
+                onRefresh={refreshTrainees}
+              />
+            }
             isLoading={isLoading}
             enableRowSelection={true}
             enableRowActions={true}
-            setBranch={setBranch} // لتغيير الفرع
+            setBranch={setBranch}
             pagination={pagination}
             onPageChange={handlePageChange}
             onPerPageChange={handlePerPageChange}
             currentPage={page}
+            // ✅ NEW: حتى لو Toolbar/AdvancedTable بينادي onRefresh
+            onRefresh={refreshTrainees}
           />
         </div>
       </div>

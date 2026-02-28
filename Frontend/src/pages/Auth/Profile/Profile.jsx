@@ -153,20 +153,51 @@ const Profile = () => {
           <div className={styles.profileTilte}>
             <img
               src={(() => {
-                const imageUrl = img_profile?.URL || // Show preview of selected image
-                  (profile?.user?.user_image 
-                    ? `${import.meta.env.VITE_API_URL_image}${profile.user.user_image}/${token}`
-                    : profile_Img); // Fallback to default avatar
+                if (img_profile?.URL) {
+                  return img_profile.URL; // Show preview of selected image
+                }
                 
-                console.log("Image URL:", imageUrl);
-                console.log("Profile user image:", profile?.user?.user_image);
-                console.log("Token:", token);
-                console.log("API URL Image:", import.meta.env.VITE_API_URL_image);
+                if (profile?.user?.user_image) {
+                  // CRITICAL FIX: Clean the malformed filename
+                  let cleanFilename = profile.user.user_image;
+                  
+                  // Remove token parts (anything after |)
+                  if (cleanFilename.includes('|')) {
+                    cleanFilename = cleanFilename.split('|')[0];
+                  }
+                  
+                  // Remove path parts - get just the filename
+                  if (cleanFilename.includes('/')) {
+                    cleanFilename = cleanFilename.split('/').pop();
+                  }
+                  
+                  // Remove query parameters
+                  if (cleanFilename.includes('?')) {
+                    cleanFilename = cleanFilename.split('?')[0];
+                  }
+                  
+                  // Ensure base URL is clean (no trailing slash)
+                  const baseUrl = import.meta.env.VITE_API_URL_image.replace(/\/$/, '');
+                  
+                  // Construct the correct URL
+                  const imageUrl = `${baseUrl}/storage/user/${cleanFilename}`;
+                  
+                  console.log("Raw user image:", profile.user.user_image);
+                  console.log("Clean filename:", cleanFilename);
+                  console.log("Final Image URL:", imageUrl);
+                  console.log("Base URL:", baseUrl);
+                  
+                  return imageUrl;
+                }
                 
-                return imageUrl;
+                return profile_Img; // Fallback to default avatar
               })()}
               loading="lazy"
               alt="profile"
+              onError={(e) => {
+                console.error("Profile image failed to load:", e.target.src);
+                e.target.src = profile_Img; // Fallback to default on error
+              }}
             />
 
             <div className={styles.uploadFile}>
