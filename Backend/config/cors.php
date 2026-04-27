@@ -1,7 +1,7 @@
 <?php
 
 
-    /*
+/*
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
@@ -13,7 +13,7 @@
     | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     |
     */
-    //sanctum/csrf-cookie
+//sanctum/csrf-cookie
 
 
 return [
@@ -28,6 +28,8 @@ return [
     'allowed_origins' => [
         'https://gatewaysystem.net',
         'https://www.gatewaysystem.net',
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
     ],
 
     'allowed_origins_patterns' => [],
@@ -40,5 +42,3 @@ return [
 
     'supports_credentials' => true,
 ];
-
-

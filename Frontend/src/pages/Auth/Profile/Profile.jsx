@@ -11,9 +11,9 @@ import PathName from "@src/components/Gateway-System/PathName/PathName";
 import Spinner from "@src/components/Gateway-System/Spinner/Spinner";
 import { countries } from "@src/shared/Countries";
 import {
-    clearError,
-    getUserSelf,
-    updateUserProfile,
+  clearError,
+  getUserSelf,
+  updateUserProfile,
 } from "@src/store/reducers/Auth/Profile/ProfileSlice";
 import { getBranchesAllPages } from "@src/store/reducers/Branches/BrancheSlice";
 import checkPermission from "@src/util/CheckPermission";
@@ -71,36 +71,38 @@ const Profile = () => {
 
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData);
-    
+
     // Create a new FormData object for proper multipart/form-data submission
     const submitFormData = new FormData();
-    
+
     // Add the image file if selected
     if (img_profile?.Img) {
-      submitFormData.append('image', img_profile.Img);
+      submitFormData.append("image", img_profile.Img);
     }
-    
+
     // Add other form fields
-    submitFormData.append('full_name', data?.full_name || '');
-    submitFormData.append('email', `${data?.email}@gatewaycommunity.net`);
-    submitFormData.append('country', data?.country || '');
-    submitFormData.append('branch', data?.branch || '');
-    
+    submitFormData.append("full_name", data?.full_name || "");
+    submitFormData.append("email", `${data?.email}@gatewaycommunity.net`);
+    submitFormData.append("country", data?.country || "");
+    submitFormData.append("branch", data?.branch || "");
+
     // Handle phone numbers as array
-    const phoneNumbers = [data?.phone_number_0?.replace(/\s/g, "") || ''];
+    const phoneNumbers = [data?.phone_number_0?.replace(/\s/g, "") || ""];
     if (data?.phone_number_1) {
       phoneNumbers.push(data?.phone_number_1.replace(/\s/g, ""));
     }
-    
+
     // Append phone numbers as array elements
     phoneNumbers.forEach((phone, index) => {
       submitFormData.append(`phone_numbers[${index}]`, phone);
     });
-    
+
     // Add optional fields
-    if (data?.password) submitFormData.append('password', data.password);
-    if (data?.confirm_password) submitFormData.append('confirm_password', data.confirm_password);
-    if (data?.personal_email) submitFormData.append('personal_email', data.personal_email);
+    if (data?.password) submitFormData.append("password", data.password);
+    if (data?.confirm_password)
+      submitFormData.append("confirm_password", data.confirm_password);
+    if (data?.personal_email)
+      submitFormData.append("personal_email", data.personal_email);
 
     if (password !== passwordAgain) return;
 
@@ -153,60 +155,38 @@ const Profile = () => {
           <div className={styles.profileTilte}>
             <img
               src={(() => {
+                // 1. لو المستخدم اختار صورة جديدة من جهازه، اعرضها كـ Preview
                 if (img_profile?.URL) {
-                  return img_profile.URL; // Show preview of selected image
+                  return img_profile.URL;
                 }
-                
+
+                // 2. لو مفيش صورة جديدة، اعرض صورة البروفايل اللي جاية من السيرفر
                 if (profile?.user?.user_image) {
-<<<<<<< HEAD
-                  // CRITICAL FIX: Clean the malformed filename
                   let cleanFilename = profile.user.user_image;
-                  
-                  // Remove token parts (anything after |)
-                  if (cleanFilename.includes('|')) {
-                    cleanFilename = cleanFilename.split('|')[0];
-                  }
-                  
-                  // Remove path parts - get just the filename
-                  if (cleanFilename.includes('/')) {
-                    cleanFilename = cleanFilename.split('/').pop();
-                  }
-                  
-                  // Remove query parameters
-                  if (cleanFilename.includes('?')) {
-                    cleanFilename = cleanFilename.split('?')[0];
-                  }
-                  
-                  // Ensure base URL is clean (no trailing slash)
-                  const baseUrl = import.meta.env.VITE_API_URL_image.replace(/\/$/, '');
-                  
-                  // Construct the correct URL
-                  const imageUrl = `${baseUrl}/storage/user/${cleanFilename}`;
-                  
-                  console.log("Raw user image:", profile.user.user_image);
-                  console.log("Clean filename:", cleanFilename);
-                  console.log("Final Image URL:", imageUrl);
-                  console.log("Base URL:", baseUrl);
-=======
-                  const imagePath = profile.user.user_image;
-                  // Construct public storage URL
-                  const imageUrl = `${import.meta.env.VITE_API_URL_image}/storage/user/${imagePath}`;
-                  
-                  console.log("Image URL:", imageUrl);
-                  console.log("Profile user image:", profile.user.user_image);
-                  console.log("API URL Image:", import.meta.env.VITE_API_URL_image);
->>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
-                  
-                  return imageUrl;
+
+                  // تنظيف اسم الملف من أي زيادات (Tokens أو Query Params)
+                  if (cleanFilename.includes("|"))
+                    cleanFilename = cleanFilename.split("|")[0];
+                  if (cleanFilename.includes("/"))
+                    cleanFilename = cleanFilename.split("/").pop();
+                  if (cleanFilename.includes("?"))
+                    cleanFilename = cleanFilename.split("?")[0];
+
+                  const baseUrl = import.meta.env.VITE_API_URL_image.replace(
+                    /\/$/,
+                    "",
+                  );
+                  return `${baseUrl}/storage/user/${cleanFilename}`;
                 }
-                
-                return profile_Img; // Fallback to default avatar
+
+                // 3. لو مفيش ده ولا ده، اعرض الصورة الافتراضية
+                return profile_Img;
               })()}
               loading="lazy"
               alt="profile"
               onError={(e) => {
                 console.error("Profile image failed to load:", e.target.src);
-                e.target.src = profile_Img; // Fallback to default on error
+                e.target.src = profile_Img; // Fallback
               }}
             />
 
@@ -221,7 +201,12 @@ const Profile = () => {
                 onChange={(e) => {
                   const file = e.target.files[0];
                   if (file) {
-                    console.log("Image selected:", file.name, file.size, file.type);
+                    console.log(
+                      "Image selected:",
+                      file.name,
+                      file.size,
+                      file.type,
+                    );
                     setImgProfile({
                       URL: URL.createObjectURL(file),
                       Img: file,
@@ -346,3 +331,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

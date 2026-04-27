@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
         // $middleware->api(append: [
         //     APIKeyMiddleware::class,
         // ]);
@@ -33,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'error' => 'The requested route does not exist.'
                 ], 404);
             }
-            
+
             return response()->view('errors.404', [], 404);
         });
     })

@@ -116,50 +116,31 @@ const HeaderMobile = ({
             {/* Menu Profile */}
             <Button
               id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
+              aria-controls={Boolean(profile) ? "basic-menu" : undefined}
               aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
+              aria-expanded={Boolean(profile) ? "true" : undefined}
               onClick={handleClick}
             >
               {imgProfile ? (
                 <img
-<<<<<<< HEAD
                   src={(() => {
-                    // CRITICAL FIX: Clean the malformed filename
+                    // تنظيف اسم الملف
                     let cleanFilename = imgProfile;
+                    if (cleanFilename.includes('|')) cleanFilename = cleanFilename.split('|')[0];
+                    if (cleanFilename.includes('/')) cleanFilename = cleanFilename.split('/').pop();
+                    if (cleanFilename.includes('?')) cleanFilename = cleanFilename.split('?')[0];
                     
-                    // Remove token parts (anything after |)
-                    if (cleanFilename.includes('|')) {
-                      cleanFilename = cleanFilename.split('|')[0];
-                    }
-                    
-                    // Remove path parts - get just the filename
-                    if (cleanFilename.includes('/')) {
-                      cleanFilename = cleanFilename.split('/').pop();
-                    }
-                    
-                    // Remove query parameters
-                    if (cleanFilename.includes('?')) {
-                      cleanFilename = cleanFilename.split('?')[0];
-                    }
-                    
-                    // Ensure base URL is clean
                     const baseUrl = import.meta.env.VITE_API_URL_image.replace(/\/$/, '');
-                    
-                    // Construct the correct URL
                     return `${baseUrl}/storage/user/${cleanFilename}`;
                   })()}
-=======
-                  src={`${import.meta.env.VITE_API_URL_image}/storage/user/${imgProfile}`}
->>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
-                  alt="Avatar Img_1"
+                  alt="Avatar"
+                  style={{ width: '35px', height: '35px', borderRadius: '50%' }}
                   onError={(e) => {
-                    console.error("Mobile header image failed to load:", e.target.src);
-                    e.target.src = Avatar; // Fallback to default on error
+                    e.target.src = Avatar; 
                   }}
                 />
               ) : (
-                <img src={Avatar} alt="Avatar Img_2" />
+                <img src={Avatar} alt="Default Avatar" style={{ width: '35px', height: '35px' }} />
               )}
             </Button>
             <CustomizedMenus isOpen={profile} handlerClose={handleClose}>

@@ -102,7 +102,7 @@ const Header = ({ handleOpenMenu }) => {
                 {reply?.full_name}
               </p>
             </div>,
-            "bottom-right"
+            "bottom-right",
           );
         }
       });
@@ -160,7 +160,7 @@ const Header = ({ handleOpenMenu }) => {
                 {notification?.full_name} {notification?.action}
               </p>
             </div>,
-            "bottom-right"
+            "bottom-right",
           );
         }
       });
@@ -310,40 +310,24 @@ const Header = ({ handleOpenMenu }) => {
               >
                 {profile?.user?.user_image ? (
                   <img
-<<<<<<< HEAD
                     src={(() => {
-                      // CRITICAL FIX: Clean the malformed filename
                       let cleanFilename = profile.user.user_image;
-                      
-                      // Remove token parts (anything after |)
-                      if (cleanFilename.includes('|')) {
-                        cleanFilename = cleanFilename.split('|')[0];
-                      }
-                      
-                      // Remove path parts - get just the filename
-                      if (cleanFilename.includes('/')) {
-                        cleanFilename = cleanFilename.split('/').pop();
-                      }
-                      
-                      // Remove query parameters
-                      if (cleanFilename.includes('?')) {
-                        cleanFilename = cleanFilename.split('?')[0];
-                      }
-                      
-                      // Ensure base URL is clean
-                      const baseUrl = import.meta.env.VITE_API_URL_image.replace(/\/$/, '');
-                      
-                      // Construct the correct URL
+
+                      if (cleanFilename.includes("|"))
+                        cleanFilename = cleanFilename.split("|")[0];
+                      if (cleanFilename.includes("/"))
+                        cleanFilename = cleanFilename.split("/").pop();
+                      if (cleanFilename.includes("?"))
+                        cleanFilename = cleanFilename.split("?")[0];
+
+                      const baseUrl =
+                        import.meta.env.VITE_API_URL_image.replace(/\/$/, "");
                       return `${baseUrl}/storage/user/${cleanFilename}`;
                     })()}
-=======
-                    src={`${import.meta.env.VITE_API_URL_image}/storage/user/${profile.user.user_image}`}
->>>>>>> e4cf17cdbc6171ae01a8bd8086dfe7fe44a22086
-                    alt="Avatar Img_1"
+                    alt="Avatar"
                     loading="lazy"
                     onError={(e) => {
-                      console.error("Header image failed to load:", e.target.src);
-                      e.target.src = Avatar; // Fallback to default on error
+                      e.target.src = Avatar;
                     }}
                   />
                 ) : (
@@ -390,3 +374,4 @@ Header.propTypes = {
 };
 
 export default Header;
+
