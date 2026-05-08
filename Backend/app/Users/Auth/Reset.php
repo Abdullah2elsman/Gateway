@@ -18,12 +18,11 @@ class Reset
 {
     public function reset(ResetPasswordRequest $request)
     {
-        try
-        {
+        try {
             $resetToken = DB::table('password_reset_tokens')
-            ->where('email', $request->email)
-            ->where('token', $request->token)
-            ->first();
+                ->where('email', $request->email)
+                ->where('token', $request->token)
+                ->first();
 
             if (!$resetToken || Carbon::parse($resetToken->created_at)->addMinutes(60)->isPast()) {
                 return response(['status' => 'Invalid or expired token.'], 400);
@@ -38,9 +37,7 @@ class Reset
             $user->update(['password' => Hash::make($request->password)]);
 
             return response(["status" => "Your password has been reset successfully."], 200);
-        }
-        catch(\Throwable $e)
-        {
+        } catch (\Throwable $e) {
             return response(["status" => "An error occurred while setting the password.", "error" => $e->getMessage()], 500);
         }
     }

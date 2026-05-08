@@ -14,8 +14,7 @@ class Forget
 {
     public function forget(ForgetPasswordRequest $request)
     {
-        try
-        {
+        try {
             $token = Str::random(60);
 
             $email = $request->email;
@@ -27,16 +26,14 @@ class Forget
 
             $destinationEmail = env('MAIL_DEBUG_TO_ADDRESS', $email);
 
-            Mail::send('email.reset', ['token' => $token, 'email' => $email], function($message) use ($destinationEmail) {
+            Mail::send('email.reset', ['token' => $token, 'email' => $email], function ($message) use ($destinationEmail) {
                 $message->to($destinationEmail)->subject('Reset Password Notification');
             });
-        
+
             return response(['status' => "A password reset link has been sent to your email."], 200);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return response([
-                'status' => "An error occurred.", 
+                'status' => "An error occurred.",
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile()
