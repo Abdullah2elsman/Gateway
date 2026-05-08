@@ -14,7 +14,7 @@ class ForgetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:gt_usermeta,meta_value']
+            'email' => ['required', 'email', 'exists:gt_users,email']
         ];
     }
 }

@@ -46,7 +46,9 @@ Route::prefix('v1')->group(function () {
     // ========================================================================
     // PUBLIC ROUTES (No Authentication Required)
     // ========================================================================
-
+    Route::get('/test', function (){
+        return 'test';
+    });
     // Authentication Routes
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/auth', [LoginController::class, 'login']);

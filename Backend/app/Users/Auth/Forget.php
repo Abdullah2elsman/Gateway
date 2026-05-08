@@ -20,11 +20,10 @@ class Forget
 
             $email = $request->email;
 
-            DB::table('password_reset_tokens')->insert([
-                'email' => $email, 
-                'token' => $token, 
-                'created_at' => Carbon::now()
-            ]);
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $email],
+                ['token' => $token, 'created_at' => Carbon::now()]
+            );
 
             Mail::send('email.reset', ['token' => $token, 'email' => $email], function($message) use ($email) {
                 $message->to($email)->subject('Reset Password Notification');
@@ -34,7 +33,12 @@ class Forget
         }
         catch(Exception $e)
         {
-            return response(['status' => "An error occurred or this email does not exist."], 401);
+            return response([
+                'status' => "An error occurred.", 
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
         }
     }
 }

@@ -19,7 +19,7 @@ class ResetPasswordRequest extends FormRequest
             'token' => ['required'],
             'password' => ['required_with:password_confirmation', 'string', 'same:password_confirmation', 'min:8'],
             'password_confirmation' =>  ['string', 'min:8'],
-            'email' => ['required', 'email', 'exists:gt_usermeta,meta_value']
+            'email' => ['required', 'email', 'exists:gt_users,email']
         ];
     }
 }
