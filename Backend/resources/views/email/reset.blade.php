@@ -89,7 +89,7 @@
         <p>Hello,</p>
         <p>You are receiving this email because we received a password reset request for your account.</p>
 
-        <a href={{ "http://178.128.168.94/reset-password?token=". $token }} class="cta-button">Reset Password</a>
+        <a href="{{ env('FRONTEND_URL', 'http://localhost:5173') }}/reset-password?token={{ $token }}&email={{ urlencode($email) }}" class="cta-button">Reset Password</a>
 
         <p>This password reset link will expire in 60 minutes.</p>
         

@@ -29,15 +29,19 @@ class Reset
                 return response(['status' => 'Invalid or expired token.'], 400);
             }
 
-            $user = User::find(UserMeta::where('meta_key', 'personal_email')->where('meta_value', $request->email)->value('user_id'));
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response(['status' => 'User not found.'], 404);
+            }
 
             $user->update(['password' => Hash::make($request->password)]);
 
             return response(["status" => "Your password has been reset successfully."], 200);
         }
-        catch(Exception $e)
+        catch(\Throwable $e)
         {
-            return response(["status" => "An error occurred while setting the password."], 401);
+            return response(["status" => "An error occurred while setting the password.", "error" => $e->getMessage()], 500);
         }
     }
 }

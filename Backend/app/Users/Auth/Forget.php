@@ -25,8 +25,10 @@ class Forget
                 ['token' => $token, 'created_at' => Carbon::now()]
             );
 
-            Mail::send('email.reset', ['token' => $token, 'email' => $email], function($message) use ($email) {
-                $message->to($email)->subject('Reset Password Notification');
+            $destinationEmail = env('MAIL_DEBUG_TO_ADDRESS', $email);
+
+            Mail::send('email.reset', ['token' => $token, 'email' => $email], function($message) use ($destinationEmail) {
+                $message->to($destinationEmail)->subject('Reset Password Notification');
             });
         
             return response(['status' => "A password reset link has been sent to your email."], 200);

@@ -6,113 +6,100 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSettings } from "@src/store/reducers/Settings/SettingsSlice";
 import { Box, Button, FormControl, Typography } from "@mui/material";
-import Input from "@src/components/Gateway-System/Inputs/Input";
 import { ToastError, ToastSuccess } from "@src/util/Toast";
-import {
-  clearError,
-  resetPassword,
-} from "@src/store/reducers/Auth/Login/LoginSlice";
+import { clearError, resetPassword } from "@src/store/reducers/Auth/Login/LoginSlice";
 import Password from "@src/components/Gateway-System/Inputs/Password";
 import PasswordChecklist from "react-password-checklist";
 import Spinner from "@src/components/Gateway-System/Spinner/Spinner";
 
 const Reset = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState({
-    status: false,
-    message: "",
-  });
-  const [confirmpasswordError, setConfirmPasswordError] = useState({
-    status: false,
-    message: "",
-  });
-  const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
-  const [PasswordMatch, setPasswordMatch] = useState(false);
-
   const User = UserData();
   const { search } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { settings } = useSelector((state) => state.settings);
-  const { isLoading, isError } = useSelector((state) => state.login);
+  const { isLoading } = useSelector((state) => state.login);
+
+  // Read token and email directly from URL
+  const urlParams = new URLSearchParams(search);
+  const token = urlParams.get("token");
+  const email = urlParams.get("email");
+
+  const [password, setPassword] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [PasswordMatch, setPasswordMatch] = useState(false);
 
   useEffect(() => {
     dispatch(fetchSettings());
+    return () => dispatch(clearError());
   }, [dispatch]);
 
-  const validateInputs = () => {
-    let isValid = true;
-
-    if (!PasswordMatch) {
-      setPasswordError({
-        status: true,
-        message: "Password is required.",
-      });
-
-      setConfirmPasswordError({
-        status: true,
-        message: "Confirm Password is required.",
-      });
-
-      isValid = false;
-    } else {
-      setPasswordError({
-        status: false,
-        message: "",
-      });
-      setConfirmPasswordError({
-        status: false,
-        message: "",
-      });
-    }
-
-    return isValid;
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-
-    let Reset = {
-      email: data.get("email"),
-      password: data.get("password"),
-      password_confirmation: data.get("password_confirmation"),
-      token: search.slice(7, search.length),
-    };
-
-    if (Reset.password !== Reset.password_confirmation) return;
-
-    dispatch(resetPassword(Reset))
-      .unwrap()
-      .then(({ status }) => {
-        ToastSuccess(status);
-        navigate("/login");
-      });
-  };
-
-  useEffect(() => {
-    if (isError) {
-      ToastError(isError.status);
-      setTimeout(() => {
-        dispatch(clearError());
-      }, 3000);
-    }
-  }, [isError, dispatch]);
-
+  // If already logged in, redirect home
   if (User?.token) {
     return <Navigate to="/" replace />;
   }
+
+  // If no token in URL, show error
+  if (!token || !email) {
+    return (
+      <div className={styles.auth}>
+        <div className={styles.overlay}></div>
+        <div className={styles.auth_content}>
+          <Typography component="h1" variant="h4" sx={{ fontSize: "22px", mb: 2 }}>
+            Invalid Reset Link
+          </Typography>
+          <Typography sx={{ mb: 3, color: "var(--text-color)" }}>
+            This link is invalid or has expired. Please request a new one.
+          </Typography>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => navigate("/forget-password")}
+            sx={{ padding: "12px", textTransform: "none", fontSize: "15px" }}
+          >
+            Request New Link
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (!PasswordMatch) {
+      ToastError("Passwords do not match or do not meet the required criteria.");
+      return;
+    }
+
+    // Exactly what the API needs
+    const payload = {
+      email: email,
+      token: token,
+      password: password,
+      password_confirmation: passwordAgain,
+    };
+
+    dispatch(resetPassword(payload))
+      .unwrap()
+      .then(({ status }) => {
+        ToastSuccess(status || "Password reset successfully!");
+        navigate("/login");
+      })
+      .catch((error) => {
+        const message = error?.status || error?.message || "An error occurred.";
+        ToastError(message);
+      });
+  };
 
   return (
     <div className={styles.auth}>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{`${
-          settings?.site_title ? settings.site_title : "Gateway System"
-        } | reset-password`}</title>
+        <title>{`${settings?.site_title || "Gateway System"} | Reset Password`}</title>
       </Helmet>
 
       <div className={styles.overlay}></div>
@@ -120,34 +107,24 @@ const Reset = () => {
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: "100%", fontSize: "25px" }}
+          sx={{ width: "100%", fontSize: "25px", marginBottom: "10px" }}
         >
           Reset Password
         </Typography>
+        <Typography variant="body2" sx={{ color: "var(--text-color)", mb: 2 }}>
+          Resetting password for: <strong>{email}</strong>
+        </Typography>
+
         <Box
           component="form"
           onSubmit={onSubmit}
           noValidate
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            gap: 3,
-            margin: "20px 0 0",
-          }}
+          sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 3 }}
         >
-          <Input
-            id="email"
-            label="Email"
-            placeholder="example@example.com"
-            required={true}
-          />
-
           <FormControl sx={{ gap: 1 }}>
             <Password
               id="password"
               label="New Password"
-              Error={passwordError}
               value={password}
               setValue={setPassword}
               showType={showPassword}
@@ -161,19 +138,14 @@ const Reset = () => {
               valueAgain={passwordAgain}
               style={{
                 color: "var(--text-gray)",
-                display:
-                  password.length > 0 ||
-                  passwordAgain.length > 0 ||
-                  PasswordMatch
-                    ? "block"
-                    : "none",
+                display: password.length > 0 || passwordAgain.length > 0 ? "block" : "none",
               }}
               onChange={(isValid) => setPasswordMatch(isValid)}
             />
           </FormControl>
+
           <FormControl sx={{ gap: "10px" }}>
             <Password
-              Error={confirmpasswordError}
               label="Confirm New Password"
               id="password_confirmation"
               value={passwordAgain}
@@ -189,8 +161,8 @@ const Reset = () => {
             fullWidth
             variant="contained"
             className={styles.button}
-            onClick={validateInputs}
-            sx={{ gap: 1 }}
+            disabled={isLoading}
+            sx={{ gap: 1, padding: "12px", fontSize: "16px", textTransform: "none" }}
           >
             {isLoading && <Spinner />} Reset Password
           </Button>
