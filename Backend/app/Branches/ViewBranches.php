@@ -24,7 +24,10 @@ class ViewBranches
                 $branches[$key] = ['branch' => $s_branch->district];
             }
 
-            Auth::check() && $current_branch = ['current_branch' => $this->Branch(auth()->user()?->branch_id)->first()?->district];
+            $authUser = auth()->user();
+            if (Auth::check() && $authUser !== null) {
+                $current_branch = ['current_branch' => $this->Branch($authUser->branch_id)->first()?->district];
+            }
 
             return response([...$current_branch, 'branches' => $branches], 201);
         }

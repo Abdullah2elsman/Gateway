@@ -5,6 +5,8 @@ namespace App\Users\Auth;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\UserMeta;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +26,18 @@ class Forget
                 ['token' => $token, 'created_at' => Carbon::now()]
             );
 
-            $destinationEmail = env('MAIL_DEBUG_TO_ADDRESS', $email);
+            // Look up the user's personal email from gt_usermeta
+            $user = User::where('email', $email)->first();
+
+            $personalEmail = UserMeta::where('user_id', $user->id)
+                ->where('meta_key', 'personal_email')
+                ->value('meta_value');
+
+            // Send to personal email if set, otherwise fall back to system email
+            $destinationEmail = $personalEmail ?? $email;
+
+            // Allow debug override via .env
+            $destinationEmail = env('MAIL_DEBUG_TO_ADDRESS', $destinationEmail);
 
             Mail::send('email.reset', ['token' => $token, 'email' => $email], function ($message) use ($destinationEmail) {
                 $message->to($destinationEmail)->subject('Reset Password Notification');

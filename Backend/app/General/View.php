@@ -2,6 +2,7 @@
 
 namespace App\General;
 
+use Exception;
 use App\Models\GeneralMeta;
 use App\Traits\GetGeneralMetaByKey;
 use Illuminate\Support\Facades\Gate;
